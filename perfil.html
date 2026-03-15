@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="site-shell profile-shell">
+    <section class="card profile-card">
+      <header class="panel-header simple">
+        <div>
+          <p class="eyebrow">Perfil</p>
+          <h1>Datos de acceso</h1>
+        </div>
+        <button id="backToPanel" class="mini-button" type="button">Volver</button>
+      </header>
+
+      <section class="profile-grid">
+        <div class="profile-data">
+          <div class="data-row">
+            <span>Estudio</span>
+            <strong id="profileStudio">Estudio</strong>
+          </div>
+          <div class="data-row">
+            <span>Correo</span>
+            <strong id="profileEmail">correo@estudio.com</strong>
+          </div>
+          <div class="data-row">
+            <span>Teléfono</span>
+            <strong id="profilePhone">—</strong>
+          </div>
+        </div>
+
+        <div class="profile-logo-wrap" aria-hidden="true">
+          <img src="assets/isologo.jpeg" alt="" class="profile-logo" />
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
