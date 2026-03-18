@@ -1,5 +1,7 @@
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOXk1eSBz_OuVeDagtYTbMYQvjVtdcBRaXTHf-X926DcOGp-XFWEveAvKJp0RoYI4ftg/exec';
 
+let orderSubmitting = false;
+
 function setMessage(el, message, type = '') {
   if (!el) return;
   el.textContent = message;
@@ -181,9 +183,11 @@ async function handleLogin(event) {
 
 async function handleOrderSubmit(event) {
   event.preventDefault();
+  if (orderSubmitting) return;
 
   const form = event.currentTarget;
   const msg = document.getElementById('orderMessage');
+  const submitButton = form.querySelector('button[type="submit"]');
   const user = getStoredUser();
 
   if (!user || !user.email || !user.estudio) {
@@ -243,6 +247,13 @@ async function handleOrderSubmit(event) {
   }
 
   try {
+    orderSubmitting = true;
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'ENVIANDO…';
+    }
+
     setMessage(msg, 'Enviando pedido…');
 
     const base64 = await toBase64(file);
@@ -262,7 +273,7 @@ async function handleOrderSubmit(event) {
     });
 
     if (!data.ok) {
-      throw new Error('No se pudo enviar el pedido.');
+      throw new Error(data.error || 'No se pudo enviar el pedido.');
     }
 
     setMessage(msg, 'Pedido recibido. Te contactaremos por la vía habitual.', 'is-success');
@@ -274,6 +285,13 @@ async function handleOrderSubmit(event) {
     await loadDashboard();
   } catch (error) {
     setMessage(msg, error.message || 'No se pudo enviar el pedido.', 'is-error');
+  } finally {
+    orderSubmitting = false;
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = 'SOLICITAR IMPRESIÓN';
+    }
   }
 }
 
@@ -294,11 +312,7 @@ async function loadDashboard() {
       email: user.email
     });
 
-    if (filesData.ok) {
-      renderFiles(filesData.files || []);
-    } else {
-      renderFiles([]);
-    }
+    renderFiles(filesData.ok ? (filesData.files || []) : []);
   } catch {
     renderFiles([]);
   }
@@ -309,11 +323,7 @@ async function loadDashboard() {
       email: user.email
     });
 
-    if (ordersData.ok) {
-      renderHistory(ordersData.orders || []);
-    } else {
-      renderHistory([]);
-    }
+    renderHistory(ordersData.ok ? (ordersData.orders || []) : []);
   } catch {
     renderHistory([]);
   }
