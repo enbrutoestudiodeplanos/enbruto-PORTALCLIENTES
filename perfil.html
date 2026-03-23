@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perfil — En Bruto</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500&family=Barlow:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="site-shell">
+    <section class="card profile-card">
+
+      <header class="panel-header simple">
+        <div>
+          <p class="eyebrow">Cuenta</p>
+          <h1>Datos<span class="accent" style="display:inline;margin-left:0.18em">del estudio.</span></h1>
+        </div>
+        <div class="header-actions">
+          <button id="backToPanel" class="mini-button" type="button"><span>← Volver</span></button>
+        </div>
+      </header>
+
+      <section class="profile-grid">
+
+        <div class="profile-data">
+          <div class="data-row">
+            <span>Estudio</span>
+            <strong id="profileStudio">—</strong>
+          </div>
+          <div class="data-row">
+            <span>Correo</span>
+            <strong id="profileEmail">—</strong>
+          </div>
+          <div class="data-row">
+            <span>Teléfono</span>
+            <strong id="profilePhone">—</strong>
+          </div>
+          <div class="data-row">
+            <span>Estado</span>
+            <strong id="profileStatus" style="color:var(--success)">Activo</strong>
+          </div>
+        </div>
+
+        <div class="profile-logo-wrap" aria-hidden="true">
+          <img src="assets/isologo.jpeg" alt="" class="profile-logo" />
+        </div>
+
+      </section>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
