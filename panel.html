@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -7,6 +8,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -20,79 +23,97 @@
         </div>
         <div class="header-actions">
           <button id="profileButton" class="mini-button" type="button">Perfil</button>
-          <button id="logoutButton" class="mini-button" type="button">Salir</button>
+          <button id="logoutButton"  class="mini-button" type="button">Salir</button>
         </div>
       </header>
 
-      <section class="dashboard-grid">
-        <article class="info-block">
-          <div class="block-head">
-            <h2>Archivos disponibles</h2>
+```
+  <section class="dashboard-grid">
+
+    <!-- Archivos disponibles -->
+    <article class="info-block">
+      <div class="block-head">
+        <h2>Archivos disponibles</h2>
+      </div>
+      <div id="sharedFiles" class="file-list"></div>
+    </article>
+
+    <!-- Solicitar impresión -->
+    <article class="info-block">
+      <div class="block-head between">
+        <h2>Solicitar impresión</h2>
+      </div>
+      <form id="orderForm" class="stack-form compact-form" novalidate>
+        <div class="grid-two">
+          <div>
+            <label for="orderStudy">Cliente / estudio</label>
+            <input id="orderStudy" name="study" type="text" readonly />
           </div>
-          <div id="sharedFiles" class="file-list"></div>
-        </article>
-
-        <article class="info-block">
-          <div class="block-head between">
-            <h2>Solicitar impresión</h2>
+          <div>
+            <label for="orderCode">Obra / código</label>
+            <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
           </div>
-          <form id="orderForm" class="stack-form compact-form" novalidate>
-            <div class="grid-two">
-              <div>
-                <label for="orderStudy">Cliente / estudio</label>
-                <input id="orderStudy" name="study" type="text" readonly />
-              </div>
-              <div>
-                <label for="orderCode">Obra / código</label>
-                <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
-              </div>
-            </div>
+        </div>
 
-            <div class="grid-three">
-              <div>
-                <label for="orderSize">Medida</label>
-                <select id="orderSize" name="size" required>
-                  <option value="A1">A1</option>
-                  <option value="A2">A2</option>
-                  <option value="A3">A3</option>
-                  <option value="A4">A4</option>
-                </select>
-              </div>
-              <div>
-                <label for="orderType">Impresión</label>
-                <select id="orderType" name="type" required>
-                  <option value="Color">Color</option>
-                  <option value="Blanco y negro">Blanco y negro</option>
-                </select>
-              </div>
-              <div>
-                <label for="orderQty">Cantidad</label>
-                <input id="orderQty" name="quantity" type="number" min="1" step="1" value="1" required />
-              </div>
-            </div>
-
-            <label for="orderNotes">Notas</label>
-            <textarea id="orderNotes" name="notes" rows="5" placeholder="Indicaciones adicionales."></textarea>
-
-            <label for="orderFile">PDF</label>
-            <input id="orderFile" name="file" type="file" accept="application/pdf" required />
-            <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
-
-            <button class="primary-button" type="submit">Solicitar impresión</button>
-            <p id="orderMessage" class="status-message" aria-live="polite"></p>
-          </form>
-        </article>
-
-        <article class="info-block full-span">
-          <div class="block-head">
-            <h2>Historial reciente</h2>
+        <div class="grid-three">
+          <div>
+            <label for="orderSize">Medida</label>
+            <select id="orderSize" name="size" required>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="A3">A3</option>
+              <option value="A4">A4</option>
+            </select>
           </div>
-          <div id="orderHistory" class="history-list"></div>
-        </article>
-      </section>
-    </section>
+          <div>
+            <label for="orderType">Impresión</label>
+            <select id="orderType" name="type" required>
+              <option value="Color">Color</option>
+              <option value="Blanco y negro">Blanco y negro</option>
+            </select>
+          </div>
+          <div>
+            <label for="orderQty">Cantidad</label>
+            <input id="orderQty" name="quantity" type="number" min="1" step="1" value="1" required />
+          </div>
+        </div>
+
+        <label for="orderNotes">Notas</label>
+        <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+
+        <label>PDF</label>
+        <!-- Drop zone reemplaza el input clásico -->
+        <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
+          <div id="dropLabel" class="drop-label">
+            <span>Arrastrá tu PDF acá</span>
+            <span class="drop-hint">o hacé clic para seleccionar</span>
+          </div>
+        </div>
+        <!-- Input oculto, activado por el drop zone -->
+        <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
+        <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+
+        <button class="primary-button" type="submit">Solicitar impresión</button>
+        <p id="orderMessage" class="status-message" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <!-- Historial -->
+    <article class="info-block full-span">
+      <div class="block-head between">
+        <h2>Historial de pedidos</h2>
+        <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
+      </div>
+      <div id="orderHistory" class="history-list"></div>
+    </article>
+
+  </section>
+</section>
+```
+
   </main>
 
   <script src="app.js"></script>
+
 </body>
 </html>
