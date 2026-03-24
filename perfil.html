@@ -7,25 +7,39 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="site-shell profile-shell">
     <section class="card profile-card">
+
       <header class="panel-header simple">
         <div>
           <p class="eyebrow">Perfil</p>
           <h1>Datos de acceso</h1>
         </div>
-        <button id="backToPanel" class="mini-button" type="button">Volver</button>
+        <div class="header-actions">
+          <button id="goToOrder"  class="mini-button accent-button" type="button">+ Nuevo pedido</button>
+          <button id="backToPanel" class="mini-button" type="button">Volver</button>
+        </div>
       </header>
 
       <section class="profile-grid">
-        <div class="profile-data">
-          <div class="data-row">
-            <span>Estudio</span>
-            <strong id="profileStudio">Estudio</strong>
+
+        <!-- Tarjeta de identidad -->
+        <div class="identity-card">
+          <img src="assets/isologo.jpeg" alt="" class="profile-logo" />
+          <div class="identity-info">
+            <p class="eyebrow">Cliente</p>
+            <h2 id="profileStudio">Estudio</h2>
           </div>
+        </div>
+
+        <!-- Datos de contacto -->
+        <div class="profile-data-block">
+          <h3 class="block-label">Contacto</h3>
           <div class="data-row">
             <span>Correo</span>
             <strong id="profileEmail">correo@estudio.com</strong>
@@ -36,9 +50,33 @@
           </div>
         </div>
 
-        <div class="profile-logo-wrap" aria-hidden="true">
-          <img src="assets/isologo.jpeg" alt="" class="profile-logo" />
+        <!-- Resumen de actividad -->
+        <div class="activity-block">
+          <h3 class="block-label">Actividad</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="statTotal">—</span>
+              <span class="stat-label">Pedidos totales</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statMedida">—</span>
+              <span class="stat-label">Medida más usada</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statMes">—</span>
+              <span class="stat-label">Este mes</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Último pedido -->
+        <div class="last-order-block">
+          <h3 class="block-label">Último pedido</h3>
+          <div id="lastOrderContent" class="last-order-inner">
+            <span class="profile-empty">Sin pedidos registrados.</span>
+          </div>
+        </div>
+
       </section>
     </section>
   </main>
