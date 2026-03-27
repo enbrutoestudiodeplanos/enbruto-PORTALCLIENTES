@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuK-Dk_si95n05XNxe10eLiyBtFKnJ6u-k48iyR2iH0OWQClsGpW3mwGQ7w-MCTOCMvg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx87QvGiNpQW1NbBfUSGAQPHBEEWtExODZChyWfcx0ucefj30lSjoxiN5odeNUNhEITyA/exec';
 
 let orderSubmitting = false;
 let allOrders = [];
