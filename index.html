@@ -3,75 +3,471 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Portal privado</title>
-  <meta name="description" content="Portal privado para clientes autorizados." />
+  <title>Panel</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    .item-block {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .item-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8d8d8d;
+      font-weight: 700;
+    }
+
+    .delivery-group {
+      margin-top: 14px;
+    }
+
+    .add-item-btn {
+      width: 100%;
+      margin-bottom: 16px;
+      background: transparent;
+      border: 1px dashed rgba(255,255,255,0.18);
+      color: #8a8a8a;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 11px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+
+    .add-item-btn:hover {
+      border-color: rgba(255,255,255,0.34);
+      color: #d0d0d0;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .urgente-block {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .urgente-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #d1d1d1;
+      font-weight: 600;
+    }
+
+    .urgente-label input[type="checkbox"] {
+      accent-color: #fff;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .urgente-hint {
+      margin: 6px 0 0 26px;
+      font-size: 12px;
+      color: #8a8a8a;
+      line-height: 1.45;
+    }
+
+    .price-summary {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: #a8a8a8;
+      padding: 4px 0;
+    }
+
+    .price-line.total {
+      margin-top: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 15px;
+      font-weight: 700;
+      color: #eeeeee;
+    }
+
+    .price-label-urgente,
+    .price-value-urgente {
+      color: #c8960c;
+    }
+
+    @media (max-width: 720px) {
+      .item-header {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
-  <main class="site-shell portal-shell">
-    <section class="card split-card">
+  <main class="site-shell panel-shell">
+    <section class="card dashboard-card">
 
-      <div class="left-panel">
-        <p class="eyebrow">Acceso</p>
-        <h1>Portal<br>privado</h1>
-        <p class="lead">Portal privado para clientes autorizados.</p>
-
-        <form id="portalLoginForm" class="stack-form" novalidate>
-          <label for="portalEmail">Correo electrónico</label>
-          <div class="field-wrap">
-            <input id="portalEmail" name="email" type="email" placeholder="contacto@estudio.com" autocomplete="email" required />
-          </div>
-          <button class="primary-button" type="submit"><span>Acceder</span></button>
-          <p id="portalLoginMessage" class="status-message" aria-live="polite"></p>
-        </form>
-      </div>
-
-      <div class="right-panel logo-panel" aria-hidden="true">
-        <img src="assets/LANDING.svg" class="topo-bg" alt="" />
-        <div class="hero-stage">
-          <div class="hero-stage__glow"></div>
-          <div class="hero-stage__frame">
-            <div class="hero-stage__top">
-              <div class="spec-item">
-                <span class="spec-item__label">ENTREGA</span>
-                <strong>rápida</strong>
-              </div>
-              <div class="spec-item">
-                <span class="spec-item__label">ARCHIVOS</span>
-                <strong>ordenados</strong>
-              </div>
-              <div class="spec-item">
-                <span class="spec-item__label">ATENCIÓN</span>
-                <strong>directa</strong>
-              </div>
-            </div>
-            <img src="assets/isologo.svg" alt="" class="hero-logo" />
-            <div class="hero-stage__specs">
-              <div class="spec-item">
-                <span class="spec-item__label">ACCESO</span>
-                <strong>privado</strong>
-              </div>
-              <div class="spec-item">
-                <span class="spec-item__label">FLUJO</span>
-                <strong>simple</strong>
-              </div>
-              <div class="spec-item">
-                <span class="spec-item__label">SOPORTE</span>
-                <strong>humano</strong>
-              </div>
-            </div>
-          </div>
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Cliente</p>
+          <h1 id="panelStudio">Estudio</h1>
+          <p class="lead compact" id="panelEmail">correo@estudio.com</p>
         </div>
-      </div>
+        <div class="header-actions">
+          <button id="profileButton" class="mini-button" type="button">Perfil</button>
+          <button id="logoutButton" class="mini-button" type="button">Salir</button>
+        </div>
+      </header>
 
+      <section class="dashboard-grid">
+
+        <article class="info-block">
+          <div class="block-head">
+            <h2>Archivos disponibles</h2>
+          </div>
+          <div id="sharedFiles" class="file-list"></div>
+        </article>
+
+        <article class="info-block">
+          <div class="block-head between">
+            <h2>Solicitar impresión</h2>
+          </div>
+
+          <form id="orderForm" class="stack-form compact-form" novalidate>
+
+            <div class="grid-two">
+              <div>
+                <label for="orderStudy">Cliente / estudio</label>
+                <input id="orderStudy" name="study" type="text" readonly />
+              </div>
+              <div>
+                <label for="orderCode">Obra / código</label>
+                <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
+              </div>
+            </div>
+
+            <div id="itemsContainer"></div>
+
+            <button type="button" id="addItemBtn" class="add-item-btn">+ Agregar plano</button>
+
+            <label for="orderNotes">Notas</label>
+            <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+
+            <label>PDF</label>
+            <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
+              <div id="dropLabel" class="drop-label">
+                <span>Arrastrá tu PDF acá</span>
+                <span class="drop-hint">o hacé clic para seleccionar</span>
+              </div>
+            </div>
+            <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
+            <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+
+            <div class="urgente-block">
+              <label class="urgente-label">
+                <input type="checkbox" id="orderUrgente" />
+                <span>Pedido urgente</span>
+              </label>
+              <p class="urgente-hint" id="urgenteHint"></p>
+            </div>
+
+            <div class="price-summary" id="priceSummary" style="display:none;">
+              <div class="price-line">
+                <span>Subtotal</span>
+                <span id="priceSubtotal">—</span>
+              </div>
+              <div class="price-line" id="urgenteLinea" style="display:none;">
+                <span class="price-label-urgente">Recargo urgente</span>
+                <span class="price-value-urgente" id="priceUrgenteVal">—</span>
+              </div>
+              <div class="price-line total">
+                <span>Total estimado</span>
+                <span id="priceTotal">—</span>
+              </div>
+            </div>
+
+            <button class="primary-button" type="submit"><span>Solicitar impresión</span></button>
+            <p id="orderMessage" class="status-message" aria-live="polite"></p>
+
+          </form>
+        </article>
+
+        <article class="info-block full-span">
+          <div class="block-head between">
+            <h2>Historial de pedidos</h2>
+            <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
+          </div>
+          <div id="orderHistory" class="history-list"></div>
+        </article>
+
+      </section>
     </section>
   </main>
+
   <script src="app.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      let itemCounter = 0;
+      let PRECIOS = {};
+      let URGENTE_RECARGO = null;
+
+      window.initOrderForm = async function (apiUrl, email) {
+        await cargarPrecios(apiUrl, email);
+        const container = document.getElementById('itemsContainer');
+        if (container && container.children.length === 0) {
+          agregarItem();
+        }
+      };
+
+      window.getOrderItems = function () {
+        return recopilarItems();
+      };
+
+      window.getUrgente = function () {
+        const cb = document.getElementById('orderUrgente');
+        return cb ? cb.checked : false;
+      };
+
+      async function cargarPrecios(apiUrl, email) {
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'get_prices', email })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            PRECIOS = data.prices || {};
+            URGENTE_RECARGO = data.urgente_recargo ?? null;
+          }
+        } catch (_) {
+        }
+        actualizarPrecio();
+        actualizarHintUrgente();
+      }
+
+      function agregarItem() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+
+        const idx = itemCounter++;
+        const num = container.children.length + 1;
+        const div = document.createElement('div');
+        div.className = 'item-block';
+        div.dataset.idx = idx;
+
+        div.innerHTML = `
+          <div class="item-header">
+            <span class="item-label">Plano <span class="item-num">${num}</span></span>
+            <button type="button" class="mini-button remove-item-btn" data-idx="${idx}">Eliminar</button>
+          </div>
+
+          <div class="grid-three">
+            <div>
+              <label for="item_size_${idx}">Medida</label>
+              <select id="item_size_${idx}" name="item_size" data-idx="${idx}" required>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="A3">A3</option>
+                <option value="A4">A4</option>
+              </select>
+            </div>
+            <div>
+              <label for="item_type_${idx}">Impresión</label>
+              <select id="item_type_${idx}" name="item_type" data-idx="${idx}" required>
+                <option value="Color">Color</option>
+                <option value="BN">Blanco y negro</option>
+              </select>
+            </div>
+            <div>
+              <label for="item_qty_${idx}">Cantidad</label>
+              <input id="item_qty_${idx}" name="item_qty" data-idx="${idx}" type="number" min="1" step="1" value="1" required />
+            </div>
+          </div>
+
+          <div class="delivery-group">
+            <label for="item_delivery_${idx}">Tipo de entrega</label>
+            <select id="item_delivery_${idx}" name="item_delivery" data-idx="${idx}" required>
+              <option value="Obra">Obra — Plano enrollado</option>
+              <option value="Entrega">Entrega — Doblado en A4</option>
+              <option value="Presentacion">Presentación — Tubo de cartón</option>
+            </select>
+          </div>
+        `;
+
+        div.querySelectorAll('select, input[type="number"]').forEach(function (el) {
+          el.addEventListener('change', actualizarPrecio);
+          el.addEventListener('input', actualizarPrecio);
+        });
+
+        div.querySelector('.remove-item-btn').addEventListener('click', function () {
+          eliminarItem(div);
+        });
+
+        container.appendChild(div);
+        actualizarBotonesEliminar();
+        actualizarNumeracion();
+        actualizarPrecio();
+      }
+
+      function eliminarItem(div) {
+        const container = document.getElementById('itemsContainer');
+        if (!container || container.children.length <= 1) return;
+        container.removeChild(div);
+        actualizarBotonesEliminar();
+        actualizarNumeracion();
+        actualizarPrecio();
+      }
+
+      function actualizarBotonesEliminar() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+        const bloques = container.querySelectorAll('.item-block');
+        bloques.forEach(function (b) {
+          const btn = b.querySelector('.remove-item-btn');
+          if (btn) btn.style.display = bloques.length > 1 ? '' : 'none';
+        });
+      }
+
+      function actualizarNumeracion() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+        container.querySelectorAll('.item-block').forEach(function (b, i) {
+          const label = b.querySelector('.item-num');
+          if (label) label.textContent = i + 1;
+        });
+      }
+
+      function recopilarItems() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return [];
+
+        return Array.from(container.querySelectorAll('.item-block')).map(function (bloque) {
+          const medida = (bloque.querySelector('select[name="item_size"]') || {}).value || '';
+          const tipo = (bloque.querySelector('select[name="item_type"]') || {}).value || '';
+          const cantidad = parseInt((bloque.querySelector('input[name="item_qty"]') || {}).value || '1', 10);
+          const entrega = (bloque.querySelector('select[name="item_delivery"]') || {}).value || 'Obra';
+          return { medida, tipo, cantidad, entrega };
+        });
+      }
+
+      function precioItem(item) {
+        if (!item || !PRECIOS) return null;
+        const key = item.medida + '_' + item.tipo;
+        const fila = PRECIOS[key];
+        if (!fila) return null;
+        const campo = (item.entrega || '').toLowerCase();
+        const unit = fila[campo];
+        if (unit === null || unit === undefined) return null;
+        return unit * item.cantidad;
+      }
+
+      function actualizarPrecio() {
+        const items = recopilarItems();
+        const hayPrecios = Object.keys(PRECIOS).length > 0;
+
+        if (!hayPrecios) {
+          document.getElementById('priceSummary').style.display = 'none';
+          return;
+        }
+
+        let subtotal = 0;
+        let tienePrecio = false;
+
+        items.forEach(function (it) {
+          const p = precioItem(it);
+          if (p !== null) {
+            subtotal += p;
+            tienePrecio = true;
+          }
+        });
+
+        if (!tienePrecio) {
+          document.getElementById('priceSummary').style.display = 'none';
+          return;
+        }
+
+        const urgente = document.getElementById('orderUrgente');
+        const esUrgente = urgente && urgente.checked && URGENTE_RECARGO !== null;
+        const recargo = esUrgente ? subtotal * URGENTE_RECARGO : 0;
+        const total = subtotal + recargo;
+
+        document.getElementById('priceSubtotal').textContent = formatPeso(subtotal);
+        document.getElementById('priceTotal').textContent = formatPeso(total);
+
+        const linea = document.getElementById('urgenteLinea');
+        if (esUrgente) {
+          document.getElementById('priceUrgenteVal').textContent = '+' + formatPeso(recargo);
+          linea.style.display = '';
+        } else {
+          linea.style.display = 'none';
+        }
+
+        document.getElementById('priceSummary').style.display = '';
+      }
+
+      function formatPeso(n) {
+        return '$\u00a0' + Math.round(n).toLocaleString('es-AR');
+      }
+
+      function actualizarHintUrgente() {
+        const hint = document.getElementById('urgenteHint');
+        if (!hint) return;
+        if (URGENTE_RECARGO !== null) {
+          hint.textContent = 'Recargo del ' + Math.round(URGENTE_RECARGO * 100) + '% sobre el total.';
+        } else {
+          hint.textContent = 'Nos comunicaremos para coordinar.';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const addBtn = document.getElementById('addItemBtn');
+        if (addBtn) addBtn.addEventListener('click', agregarItem);
+
+        const cbUrgente = document.getElementById('orderUrgente');
+        if (cbUrgente) cbUrgente.addEventListener('change', actualizarPrecio);
+
+        setTimeout(function () {
+          const container = document.getElementById('itemsContainer');
+          if (container && container.children.length === 0) {
+            agregarItem();
+          }
+        }, 300);
+      });
+    })();
+  </script>
 </body>
 </html>
