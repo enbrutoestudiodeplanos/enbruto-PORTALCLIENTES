@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -17,287 +16,281 @@
   <style>
     /* ── Multi-item form styles ───────────────────────────────────────────── */
 
-```
-.item-block {
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 12px;
-  background: rgba(255,255,255,0.03);
-}
+    .item-block {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.03);
+    }
 
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
 
-.item-label {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #888;
-  font-weight: 600;
-}
+    .item-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      font-weight: 600;
+    }
 
-.delivery-group {
-  margin-top: 14px;
-}
+    .delivery-group {
+      margin-top: 14px;
+    }
 
-.delivery-group > .field-label {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #888;
-  margin-bottom: 8px;
-}
+    .delivery-group > .field-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 8px;
+    }
 
-.delivery-options {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+    .delivery-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-.delivery-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  cursor: pointer;
-  padding: 10px 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px;
-  transition: border-color 0.15s, background 0.15s;
-}
+    .delivery-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      transition: border-color 0.15s, background 0.15s;
+    }
 
-.delivery-option:has(input:checked) {
-  border-color: rgba(255,255,255,0.4);
-  background: rgba(255,255,255,0.05);
-}
+    .delivery-option:has(input:checked) {
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.05);
+    }
 
-.delivery-option input[type="radio"] {
-  margin-top: 3px;
-  flex-shrink: 0;
-  accent-color: #fff;
-}
+    .delivery-option input[type="radio"] {
+      margin-top: 3px;
+      flex-shrink: 0;
+      accent-color: #fff;
+    }
 
-.delivery-card {
-  display: flex;
-  flex-direction: column;
-}
+    .delivery-card {
+      display: flex;
+      flex-direction: column;
+    }
 
-.delivery-card strong {
-  font-size: 13px;
-  color: #eee;
-  font-weight: 600;
-}
+    .delivery-card strong {
+      font-size: 13px;
+      color: #eee;
+      font-weight: 600;
+    }
 
-.delivery-card span {
-  font-size: 12px;
-  color: #777;
-  margin-top: 2px;
-  line-height: 1.4;
-}
+    .delivery-card span {
+      font-size: 12px;
+      color: #777;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
 
-.add-item-btn {
-  width: 100%;
-  margin-bottom: 16px;
-  background: transparent;
-  border: 1px dashed rgba(255,255,255,0.18);
-  color: #888;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-}
+    .add-item-btn {
+      width: 100%;
+      margin-bottom: 16px;
+      background: transparent;
+      border: 1px dashed rgba(255,255,255,0.18);
+      color: #888;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
 
-.add-item-btn:hover {
-  border-color: rgba(255,255,255,0.35);
-  color: #ccc;
-}
+    .add-item-btn:hover {
+      border-color: rgba(255,255,255,0.35);
+      color: #ccc;
+    }
 
-/* ── Urgente ─────────────────────────────────────────────────────────── */
+    /* ── Urgente ─────────────────────────────────────────────────────────── */
 
-.urgente-block {
-  margin-bottom: 16px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 8px;
-}
+    .urgente-block {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+    }
 
-.urgente-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #ccc;
-  font-weight: 600;
-}
+    .urgente-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #ccc;
+      font-weight: 600;
+    }
 
-.urgente-label input[type="checkbox"] {
-  accent-color: #fff;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
+    .urgente-label input[type="checkbox"] {
+      accent-color: #fff;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
 
-.urgente-hint {
-  margin: 6px 0 0 26px;
-  font-size: 12px;
-  color: #888;
-}
+    .urgente-hint {
+      margin: 6px 0 0 26px;
+      font-size: 12px;
+      color: #888;
+    }
 
-/* ── Price summary ───────────────────────────────────────────────────── */
+    /* ── Price summary ───────────────────────────────────────────────────── */
 
-.price-summary {
-  margin-bottom: 16px;
-  padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  background: rgba(255,255,255,0.03);
-}
+    .price-summary {
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+    }
 
-.price-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: #aaa;
-  padding: 3px 0;
-}
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #aaa;
+      padding: 3px 0;
+    }
 
-.price-line.total {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  font-size: 15px;
-  font-weight: 700;
-  color: #eee;
-}
+    .price-line.total {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 15px;
+      font-weight: 700;
+      color: #eee;
+    }
 
-.price-label-urgente {
-  color: #c8960c;
-}
+    .price-label-urgente {
+      color: #c8960c;
+    }
 
-.price-value-urgente {
-  color: #c8960c;
-}
-```
-
+    .price-value-urgente {
+      color: #c8960c;
+    }
   </style>
 </head>
 <body>
   <main class="site-shell panel-shell">
     <section class="card dashboard-card">
 
-```
-  <header class="panel-header">
-    <div>
-      <p class="eyebrow">Cliente</p>
-      <h1 id="panelStudio">Estudio</h1>
-      <p class="lead compact" id="panelEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e6858994948389a683959293828f89c885898b">[email&#160;protected]</a></p>
-    </div>
-    <div class="header-actions">
-      <button id="profileButton" class="mini-button" type="button">Perfil</button>
-      <button id="logoutButton"  class="mini-button" type="button">Salir</button>
-    </div>
-  </header>
-
-  <section class="dashboard-grid">
-
-    <article class="info-block">
-      <div class="block-head">
-        <h2>Archivos disponibles</h2>
-      </div>
-      <div id="sharedFiles" class="file-list"></div>
-    </article>
-
-    <article class="info-block">
-      <div class="block-head between">
-        <h2>Solicitar impresión</h2>
-      </div>
-      <form id="orderForm" class="stack-form compact-form" novalidate>
-
-        <!-- Datos de la obra -->
-        <div class="grid-two">
-          <div>
-            <label for="orderStudy">Cliente / estudio</label>
-            <input id="orderStudy" name="study" type="text" readonly />
-          </div>
-          <div>
-            <label for="orderCode">Obra / código</label>
-            <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
-          </div>
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Cliente</p>
+          <h1 id="panelStudio">Estudio</h1>
+          <p class="lead compact" id="panelEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e6858994948389a683959293828f89c885898b">[email&#160;protected]</a></p>
         </div>
-
-        <!-- Contenedor de planos (ítems dinámicos) -->
-        <div id="itemsContainer"></div>
-
-        <!-- Botón agregar plano -->
-        <button type="button" id="addItemBtn" class="add-item-btn">+ Agregar plano</button>
-
-        <!-- Notas generales -->
-        <label for="orderNotes">Notas</label>
-        <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
-
-        <!-- PDF -->
-        <label>PDF</label>
-        <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
-          <div id="dropLabel" class="drop-label">
-            <span>Arrastrá tu PDF acá</span>
-            <span class="drop-hint">o hacé clic para seleccionar</span>
-          </div>
+        <div class="header-actions">
+          <button id="profileButton" class="mini-button" type="button">Perfil</button>
+          <button id="logoutButton"  class="mini-button" type="button">Salir</button>
         </div>
-        <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
-        <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+      </header>
 
-        <!-- Urgente -->
-        <div class="urgente-block">
-          <label class="urgente-label">
-            <input type="checkbox" id="orderUrgente" />
-            <span>Pedido urgente</span>
-          </label>
-          <p class="urgente-hint" id="urgenteHint"></p>
-        </div>
+      <section class="dashboard-grid">
 
-        <!-- Resumen de precio (se muestra solo si hay precios cargados) -->
-        <div class="price-summary" id="priceSummary" style="display:none;">
-          <div class="price-line">
-            <span>Subtotal</span>
-            <span id="priceSubtotal">—</span>
+        <article class="info-block">
+          <div class="block-head">
+            <h2>Archivos disponibles</h2>
           </div>
-          <div class="price-line" id="urgenteLinea" style="display:none;">
-            <span class="price-label-urgente">Recargo urgente</span>
-            <span class="price-value-urgente" id="priceUrgenteVal">—</span>
+          <div id="sharedFiles" class="file-list"></div>
+        </article>
+
+        <article class="info-block">
+          <div class="block-head between">
+            <h2>Solicitar impresión</h2>
           </div>
-          <div class="price-line total">
-            <span>Total estimado</span>
-            <span id="priceTotal">—</span>
+          <form id="orderForm" class="stack-form compact-form" novalidate>
+
+            <!-- Datos de la obra -->
+            <div class="grid-two">
+              <div>
+                <label for="orderStudy">Cliente / estudio</label>
+                <input id="orderStudy" name="study" type="text" readonly />
+              </div>
+              <div>
+                <label for="orderCode">Obra / código</label>
+                <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
+              </div>
+            </div>
+
+            <!-- Contenedor de planos (ítems dinámicos) -->
+            <div id="itemsContainer"></div>
+
+            <!-- Botón agregar plano -->
+            <button type="button" id="addItemBtn" class="add-item-btn">+ Agregar plano</button>
+
+            <!-- Notas generales -->
+            <label for="orderNotes">Notas</label>
+            <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+
+            <!-- PDF -->
+            <label>PDF</label>
+            <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
+              <div id="dropLabel" class="drop-label">
+                <span>Arrastrá tu PDF acá</span>
+                <span class="drop-hint">o hacé clic para seleccionar</span>
+              </div>
+            </div>
+            <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
+            <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+
+            <!-- Urgente -->
+            <div class="urgente-block">
+              <label class="urgente-label">
+                <input type="checkbox" id="orderUrgente" />
+                <span>Pedido urgente</span>
+              </label>
+              <p class="urgente-hint" id="urgenteHint"></p>
+            </div>
+
+            <!-- Resumen de precio (se muestra solo si hay precios cargados) -->
+            <div class="price-summary" id="priceSummary" style="display:none;">
+              <div class="price-line">
+                <span>Subtotal</span>
+                <span id="priceSubtotal">—</span>
+              </div>
+              <div class="price-line" id="urgenteLinea" style="display:none;">
+                <span class="price-label-urgente">Recargo urgente</span>
+                <span class="price-value-urgente" id="priceUrgenteVal">—</span>
+              </div>
+              <div class="price-line total">
+                <span>Total estimado</span>
+                <span id="priceTotal">—</span>
+              </div>
+            </div>
+
+            <button class="primary-button" type="submit"><span>Solicitar impresión</span></button>
+            <p id="orderMessage" class="status-message" aria-live="polite"></p>
+
+          </form>
+        </article>
+
+        <article class="info-block full-span">
+          <div class="block-head between">
+            <h2>Historial de pedidos</h2>
+            <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
           </div>
-        </div>
+          <div id="orderHistory" class="history-list"></div>
+        </article>
 
-        <button class="primary-button" type="submit"><span>Solicitar impresión</span></button>
-        <p id="orderMessage" class="status-message" aria-live="polite"></p>
-
-      </form>
-    </article>
-
-    <article class="info-block full-span">
-      <div class="block-head between">
-        <h2>Historial de pedidos</h2>
-        <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
-      </div>
-      <div id="orderHistory" class="history-list"></div>
-    </article>
-
-  </section>
-</section>
-```
-
+      </section>
+    </section>
   </main>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="app.js"></script>
@@ -324,7 +317,6 @@
 
          3. El campo "obra" sigue siendo orderCode.value (sin cambios).
        ══════════════════════════════════════════════════════════════════════ -->
-
   <script>
     (function () {
       'use strict';
@@ -400,8 +392,8 @@
           <div class="grid-three">
             <div>
               <label>Medida</label>
-              <select name="item_size" data-idx="${idx}" required>
-                <option value="A1">A1</option>
+              <select name="item_size" data-idx="${idx}">
+                <option value="A1" selected>A1</option>
                 <option value="A2">A2</option>
                 <option value="A3">A3</option>
                 <option value="A4">A4</option>
@@ -409,8 +401,8 @@
             </div>
             <div>
               <label>Impresión</label>
-              <select name="item_type" data-idx="${idx}" required>
-                <option value="Color">Color</option>
+              <select name="item_type" data-idx="${idx}">
+                <option value="Color" selected>Color</option>
                 <option value="BN">Blanco y negro</option>
               </select>
             </div>
@@ -460,12 +452,6 @@
         });
 
         container.appendChild(div);
-
-        // Forzar valores por defecto en selects (innerHTML no garantiza .value en todos los browsers)
-        const sizeSelect = div.querySelector('select[name="item_size"]');
-        const typeSelect = div.querySelector('select[name="item_type"]');
-        if (sizeSelect) sizeSelect.value = 'A1';
-        if (typeSelect) typeSelect.value = 'Color';
 
         actualizarBotonesEliminar();
         actualizarNumeracion();
@@ -615,4 +601,3 @@
         // Si app.js no llama a initOrderForm, agregar el primer ítem igual
         // (fallback para entornos de desarrollo o si el orden de carga varía)
         setTimeout(function () {
-         
