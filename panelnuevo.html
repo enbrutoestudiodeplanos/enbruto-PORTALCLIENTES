@@ -1,0 +1,612 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Multi-item form styles ───────────────────────────────────────────── */
+
+```
+.item-block {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.03);
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.item-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 600;
+}
+
+.delivery-group {
+  margin-top: 14px;
+}
+
+.delivery-group > .field-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.delivery-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.delivery-option:has(input:checked) {
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.05);
+}
+
+.delivery-option input[type="radio"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+  accent-color: #fff;
+}
+
+.delivery-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-card strong {
+  font-size: 13px;
+  color: #eee;
+  font-weight: 600;
+}
+
+.delivery-card span {
+  font-size: 12px;
+  color: #777;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.add-item-btn {
+  width: 100%;
+  margin-bottom: 16px;
+  background: transparent;
+  border: 1px dashed rgba(255,255,255,0.18);
+  color: #888;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.add-item-btn:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: #ccc;
+}
+
+/* ── Urgente ─────────────────────────────────────────────────────────── */
+
+.urgente-block {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+
+.urgente-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.urgente-label input[type="checkbox"] {
+  accent-color: #fff;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.urgente-hint {
+  margin: 6px 0 0 26px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* ── Price summary ───────────────────────────────────────────────────── */
+
+.price-summary {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+}
+
+.price-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #aaa;
+  padding: 3px 0;
+}
+
+.price-line.total {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 15px;
+  font-weight: 700;
+  color: #eee;
+}
+
+.price-label-urgente {
+  color: #c8960c;
+}
+
+.price-value-urgente {
+  color: #c8960c;
+}
+```
+
+  </style>
+</head>
+<body>
+  <main class="site-shell panel-shell">
+    <section class="card dashboard-card">
+
+```
+  <header class="panel-header">
+    <div>
+      <p class="eyebrow">Cliente</p>
+      <h1 id="panelStudio">Estudio</h1>
+      <p class="lead compact" id="panelEmail">correo@estudio.com</p>
+    </div>
+    <div class="header-actions">
+      <button id="profileButton" class="mini-button" type="button">Perfil</button>
+      <button id="logoutButton"  class="mini-button" type="button">Salir</button>
+    </div>
+  </header>
+
+  <section class="dashboard-grid">
+
+    <article class="info-block">
+      <div class="block-head">
+        <h2>Archivos disponibles</h2>
+      </div>
+      <div id="sharedFiles" class="file-list"></div>
+    </article>
+
+    <article class="info-block">
+      <div class="block-head between">
+        <h2>Solicitar impresión</h2>
+      </div>
+      <form id="orderForm" class="stack-form compact-form" novalidate>
+
+        <!-- Datos de la obra -->
+        <div class="grid-two">
+          <div>
+            <label for="orderStudy">Cliente / estudio</label>
+            <input id="orderStudy" name="study" type="text" readonly />
+          </div>
+          <div>
+            <label for="orderCode">Obra / código</label>
+            <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
+          </div>
+        </div>
+
+        <!-- Contenedor de planos (ítems dinámicos) -->
+        <div id="itemsContainer"></div>
+
+        <!-- Botón agregar plano -->
+        <button type="button" id="addItemBtn" class="add-item-btn">+ Agregar plano</button>
+
+        <!-- Notas generales -->
+        <label for="orderNotes">Notas</label>
+        <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+
+        <!-- PDF -->
+        <label>PDF</label>
+        <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
+          <div id="dropLabel" class="drop-label">
+            <span>Arrastrá tu PDF acá</span>
+            <span class="drop-hint">o hacé clic para seleccionar</span>
+          </div>
+        </div>
+        <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
+        <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+
+        <!-- Urgente -->
+        <div class="urgente-block">
+          <label class="urgente-label">
+            <input type="checkbox" id="orderUrgente" />
+            <span>Pedido urgente</span>
+          </label>
+          <p class="urgente-hint" id="urgenteHint"></p>
+        </div>
+
+        <!-- Resumen de precio (se muestra solo si hay precios cargados) -->
+        <div class="price-summary" id="priceSummary" style="display:none;">
+          <div class="price-line">
+            <span>Subtotal</span>
+            <span id="priceSubtotal">—</span>
+          </div>
+          <div class="price-line" id="urgenteLinea" style="display:none;">
+            <span class="price-label-urgente">Recargo urgente</span>
+            <span class="price-value-urgente" id="priceUrgenteVal">—</span>
+          </div>
+          <div class="price-line total">
+            <span>Total estimado</span>
+            <span id="priceTotal">—</span>
+          </div>
+        </div>
+
+        <button class="primary-button" type="submit"><span>Solicitar impresión</span></button>
+        <p id="orderMessage" class="status-message" aria-live="polite"></p>
+
+      </form>
+    </article>
+
+    <article class="info-block full-span">
+      <div class="block-head between">
+        <h2>Historial de pedidos</h2>
+        <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
+      </div>
+      <div id="orderHistory" class="history-list"></div>
+    </article>
+
+  </section>
+</section>
+```
+
+  </main>
+
+  <script src="app.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MULTI-ITEM FORM LOGIC
+       ─────────────────────────────────────────────────────────────────────
+       Este bloque maneja:
+         · Ítems dinámicos (agregar / eliminar planos)
+         · Selector de tipo de entrega por ítem
+         · Cálculo de precio en tiempo real desde hoja PRECIOS
+         · Checkbox urgente con recargo configurable
+
+       INTEGRACIÓN CON app.js:
+         1. Después del login exitoso, llamar:
+              window.initOrderForm(API_URL, session.email);
+            Esto carga los precios y activa el formulario.
+
+         2. En el submit handler del formulario, reemplazar la recolección
+            de campos individuales por:
+              const items = window.getOrderItems();
+            Y agregar al payload: { ...payload, items, urgente: window.getUrgente() }
+            Eliminar del payload: medida, tipo, cantidad (ahora van en items[]).
+
+         3. El campo "obra" sigue siendo orderCode.value (sin cambios).
+       ══════════════════════════════════════════════════════════════════════ -->
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ── Estado ────────────────────────────────────────────────────────────
+      let itemCounter = 0;   // índice único por ítem, nunca se resetea
+      let PRECIOS     = {};  // mapa: "A1_Color" → { obra, entrega, presentacion }
+      let URGENTE_RECARGO = null; // null = sin precio → ocultar sección
+
+      // ── API pública para app.js ───────────────────────────────────────────
+
+      /**
+       * Llamar desde app.js después del login exitoso.
+       * Carga precios y agrega el primer ítem vacío.
+       */
+      window.initOrderForm = async function (apiUrl, email) {
+        await cargarPrecios(apiUrl, email);
+        // Agregar el primer ítem solo si el contenedor está vacío
+        const container = document.getElementById('itemsContainer');
+        if (container && container.children.length === 0) {
+          agregarItem();
+        }
+      };
+
+      /** Devuelve array de ítems para incluir en el payload de crear_pedido. */
+      window.getOrderItems = function () {
+        return recopilarItems();
+      };
+
+      /** Devuelve true si el checkbox urgente está marcado. */
+      window.getUrgente = function () {
+        const cb = document.getElementById('orderUrgente');
+        return cb ? cb.checked : false;
+      };
+
+      // ── Cargar precios ────────────────────────────────────────────────────
+
+      async function cargarPrecios(apiUrl, email) {
+        try {
+          const res  = await fetch(apiUrl, {
+            method: 'POST',
+            body:   JSON.stringify({ action: 'get_prices', email }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            PRECIOS         = data.prices         || {};
+            URGENTE_RECARGO = data.urgente_recargo ?? null;
+          }
+        } catch (_) {
+          // Sin precios → formulario funciona igual, sin mostrar cotización
+        }
+        actualizarPrecio();
+        actualizarHintUrgente();
+      }
+
+      // ── Gestión de ítems ──────────────────────────────────────────────────
+
+      function agregarItem() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+
+        const idx  = itemCounter++;
+        const num  = container.children.length + 1;
+        const div  = document.createElement('div');
+        div.className    = 'item-block';
+        div.dataset.idx  = idx;
+
+        div.innerHTML = `
+          <div class="item-header">
+            <span class="item-label">Plano <span class="item-num">${num}</span></span>
+            <button type="button" class="mini-button remove-item-btn" data-idx="${idx}">Eliminar</button>
+          </div>
+          <div class="grid-three">
+            <div>
+              <label>Medida</label>
+              <select name="item_size" data-idx="${idx}" required>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="A3">A3</option>
+                <option value="A4">A4</option>
+              </select>
+            </div>
+            <div>
+              <label>Impresión</label>
+              <select name="item_type" data-idx="${idx}" required>
+                <option value="Color">Color</option>
+                <option value="BN">Blanco y negro</option>
+              </select>
+            </div>
+            <div>
+              <label>Cantidad</label>
+              <input name="item_qty" data-idx="${idx}" type="number" min="1" step="1" value="1" required />
+            </div>
+          </div>
+          <div class="delivery-group">
+            <span class="field-label">Tipo de entrega</span>
+            <div class="delivery-options">
+              <label class="delivery-option">
+                <input type="radio" name="item_entrega_${idx}" value="Obra" checked />
+                <div class="delivery-card">
+                  <strong>Obra</strong>
+                  <span>Plano enrollado, listo para portarollo propio.</span>
+                </div>
+              </label>
+              <label class="delivery-option">
+                <input type="radio" name="item_entrega_${idx}" value="Entrega" />
+                <div class="delivery-card">
+                  <strong>Entrega</strong>
+                  <span>Plano doblado en A4, en sobre.</span>
+                </div>
+              </label>
+              <label class="delivery-option">
+                <input type="radio" name="item_entrega_${idx}" value="Presentacion" />
+                <div class="delivery-card">
+                  <strong>Presentación</strong>
+                  <span>Tubo de cartón con tapas metálicas. Listo para cliente final.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+        `;
+
+        // Eventos de cambio para recalcular precio
+        div.querySelectorAll('select, input[type="number"], input[type="radio"]')
+          .forEach(function (el) {
+            el.addEventListener('change', actualizarPrecio);
+            el.addEventListener('input',  actualizarPrecio);
+          });
+
+        // Botón eliminar
+        div.querySelector('.remove-item-btn').addEventListener('click', function () {
+          eliminarItem(div);
+        });
+
+        container.appendChild(div);
+        actualizarBotonesEliminar();
+        actualizarNumeracion();
+        actualizarPrecio();
+      }
+
+      function eliminarItem(div) {
+        const container = document.getElementById('itemsContainer');
+        if (!container || container.children.length <= 1) return; // siempre mínimo 1
+        container.removeChild(div);
+        actualizarBotonesEliminar();
+        actualizarNumeracion();
+        actualizarPrecio();
+      }
+
+      function actualizarBotonesEliminar() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+        const bloques = container.querySelectorAll('.item-block');
+        bloques.forEach(function (b) {
+          const btn = b.querySelector('.remove-item-btn');
+          if (btn) btn.style.display = bloques.length > 1 ? '' : 'none';
+        });
+      }
+
+      function actualizarNumeracion() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return;
+        container.querySelectorAll('.item-block').forEach(function (b, i) {
+          const label = b.querySelector('.item-num');
+          if (label) label.textContent = i + 1;
+        });
+      }
+
+      // ── Recopilar ítems para el submit ────────────────────────────────────
+
+      function recopilarItems() {
+        const container = document.getElementById('itemsContainer');
+        if (!container) return [];
+
+        return Array.from(container.querySelectorAll('.item-block')).map(function (bloque) {
+          const idx     = bloque.dataset.idx;
+          const medida  = (bloque.querySelector('select[name="item_size"]')  || {}).value || '';
+          const tipo    = (bloque.querySelector('select[name="item_type"]')  || {}).value || '';
+          const cantidad = parseInt((bloque.querySelector('input[name="item_qty"]') || {}).value || '1', 10);
+          const radioChecked = bloque.querySelector('input[name="item_entrega_' + idx + '"]:checked');
+          const entrega = radioChecked ? radioChecked.value : 'Obra';
+          return { medida, tipo, cantidad, entrega };
+        });
+      }
+
+      // ── Cálculo de precio ─────────────────────────────────────────────────
+
+      function precioItem(item) {
+        if (!item || !PRECIOS) return null;
+        const key   = item.medida + '_' + item.tipo;
+        const fila  = PRECIOS[key];
+        if (!fila) return null;
+        const campo = (item.entrega || '').toLowerCase(); // obra | entrega | presentacion
+        const unit  = fila[campo];
+        if (unit === null || unit === undefined) return null;
+        return unit * item.cantidad;
+      }
+
+      function actualizarPrecio() {
+        const items    = recopilarItems();
+        const hayPrecios = Object.keys(PRECIOS).length > 0;
+
+        if (!hayPrecios) {
+          document.getElementById('priceSummary').style.display = 'none';
+          return;
+        }
+
+        let subtotal    = 0;
+        let tienePrecio = false;
+
+        items.forEach(function (it) {
+          const p = precioItem(it);
+          if (p !== null) {
+            subtotal += p;
+            tienePrecio = true;
+          }
+        });
+
+        if (!tienePrecio) {
+          document.getElementById('priceSummary').style.display = 'none';
+          return;
+        }
+
+        const urgente     = document.getElementById('orderUrgente');
+        const esUrgente   = urgente && urgente.checked && URGENTE_RECARGO !== null;
+        const recargo     = esUrgente ? subtotal * URGENTE_RECARGO : 0;
+        const total       = subtotal + recargo;
+
+        document.getElementById('priceSubtotal').textContent = formatPeso(subtotal);
+        document.getElementById('priceTotal').textContent    = formatPeso(total);
+
+        const linea = document.getElementById('urgenteLinea');
+        if (esUrgente) {
+          document.getElementById('priceUrgenteVal').textContent = '+' + formatPeso(recargo);
+          linea.style.display = '';
+        } else {
+          linea.style.display = 'none';
+        }
+
+        document.getElementById('priceSummary').style.display = '';
+      }
+
+      function formatPeso(n) {
+        return '$\u00a0' + Math.round(n).toLocaleString('es-AR');
+      }
+
+      // ── Hint urgente ──────────────────────────────────────────────────────
+
+      function actualizarHintUrgente() {
+        const hint = document.getElementById('urgenteHint');
+        if (!hint) return;
+        if (URGENTE_RECARGO !== null) {
+          hint.textContent = 'Recargo del ' + Math.round(URGENTE_RECARGO * 100) + '% sobre el total.';
+        } else {
+          hint.textContent = 'Nos comunicaremos para coordinar.';
+        }
+      }
+
+      // ── Eventos ───────────────────────────────────────────────────────────
+
+      document.addEventListener('DOMContentLoaded', function () {
+
+        // Botón agregar plano
+        const addBtn = document.getElementById('addItemBtn');
+        if (addBtn) addBtn.addEventListener('click', agregarItem);
+
+        // Urgente → recalcular precio
+        const cbUrgente = document.getElementById('orderUrgente');
+        if (cbUrgente) cbUrgente.addEventListener('change', actualizarPrecio);
+
+        // Si app.js no llama a initOrderForm, agregar el primer ítem igual
+        // (fallback para entornos de desarrollo o si el orden de carga varía)
+        setTimeout(function () {
+          const container = document.getElementById('itemsContainer');
+          if (container && container.children.length === 0) {
+            agregarItem();
+          }
+        }, 300);
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
