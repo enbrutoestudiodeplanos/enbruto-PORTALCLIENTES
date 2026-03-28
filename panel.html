@@ -19,9 +19,9 @@
 
     .item-block {
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       background: rgba(255,255,255,0.03);
     }
 
@@ -29,19 +29,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .item-label {
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #888;
-      font-weight: 600;
+      color: #8d8d8d;
+      font-weight: 700;
     }
 
     .delivery-group {
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
     .delivery-group > .field-label {
@@ -49,54 +50,102 @@
       font-size: 11px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #888;
-      margin-bottom: 8px;
+      color: #8a8a8a;
+      margin-bottom: 10px;
+      font-weight: 700;
     }
 
     .delivery-options {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
     }
 
     .delivery-option {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      position: relative;
+      display: block;
       cursor: pointer;
-      padding: 10px 12px;
+      padding: 0;
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      transition: border-color 0.15s, background 0.15s;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.015);
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      overflow: hidden;
+    }
+
+    .delivery-option:hover {
+      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.03);
     }
 
     .delivery-option.active {
-      border-color: rgba(255,255,255,0.4);
-      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.32);
+      background: rgba(255,255,255,0.055);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
     }
 
     .delivery-option input[type="radio"] {
-      margin-top: 3px;
-      flex-shrink: 0;
-      accent-color: #fff;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .delivery-card {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      min-width: 0;
     }
 
-    .delivery-card strong {
-      font-size: 13px;
-      color: #eee;
-      font-weight: 600;
-    }
-
-    .delivery-card span {
-      font-size: 12px;
-      color: #777;
+    .delivery-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.42);
+      position: relative;
       margin-top: 2px;
-      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .delivery-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .delivery-option.active .delivery-mark::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .delivery-copy {
+      min-width: 0;
+    }
+
+    .delivery-copy strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.25;
+      color: #efefef;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.01em;
+    }
+
+    .delivery-copy span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #8d8d8d;
+      word-break: normal;
+      overflow-wrap: break-word;
     }
 
     .add-item-btn {
@@ -104,18 +153,19 @@
       margin-bottom: 16px;
       background: transparent;
       border: 1px dashed rgba(255,255,255,0.18);
-      color: #888;
+      color: #8a8a8a;
       font-size: 12px;
       letter-spacing: 0.1em;
-      padding: 10px;
-      border-radius: 8px;
+      padding: 11px 12px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
     }
 
     .add-item-btn:hover {
-      border-color: rgba(255,255,255,0.35);
-      color: #ccc;
+      border-color: rgba(255,255,255,0.34);
+      color: #d0d0d0;
+      background: rgba(255,255,255,0.025);
     }
 
     /* ── Urgente ─────────────────────────────────────────────────────────── */
@@ -124,7 +174,8 @@
       margin-bottom: 16px;
       padding: 12px 14px;
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
     }
 
     .urgente-label {
@@ -133,7 +184,7 @@
       gap: 10px;
       cursor: pointer;
       font-size: 13px;
-      color: #ccc;
+      color: #d1d1d1;
       font-weight: 600;
     }
 
@@ -147,7 +198,8 @@
     .urgente-hint {
       margin: 6px 0 0 26px;
       font-size: 12px;
-      color: #888;
+      color: #8a8a8a;
+      line-height: 1.45;
     }
 
     /* ── Price summary ───────────────────────────────────────────────────── */
@@ -156,7 +208,7 @@
       margin-bottom: 16px;
       padding: 14px 16px;
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
+      border-radius: 10px;
       background: rgba(255,255,255,0.03);
     }
 
@@ -164,26 +216,44 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
       font-size: 13px;
-      color: #aaa;
-      padding: 3px 0;
+      color: #a8a8a8;
+      padding: 4px 0;
     }
 
     .price-line.total {
       margin-top: 8px;
-      padding-top: 8px;
+      padding-top: 10px;
       border-top: 1px solid rgba(255,255,255,0.1);
       font-size: 15px;
       font-weight: 700;
-      color: #eee;
+      color: #eeeeee;
     }
 
-    .price-label-urgente {
-      color: #c8960c;
-    }
-
+    .price-label-urgente,
     .price-value-urgente {
       color: #c8960c;
+    }
+
+    @media (max-width: 720px) {
+      .item-header {
+        align-items: flex-start;
+      }
+
+      .delivery-card {
+        grid-template-columns: 16px 1fr;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .delivery-copy strong {
+        font-size: 12px;
+      }
+
+      .delivery-copy span {
+        font-size: 11.5px;
+      }
     }
   </style>
 </head>
@@ -366,6 +436,7 @@
             <span class="item-label">Plano <span class="item-num">${num}</span></span>
             <button type="button" class="mini-button remove-item-btn" data-idx="${idx}">Eliminar</button>
           </div>
+
           <div class="grid-three">
             <div>
               <label>Medida</label>
@@ -388,28 +459,41 @@
               <input name="item_qty" data-idx="${idx}" type="number" min="1" step="1" value="1" required />
             </div>
           </div>
+
           <div class="delivery-group">
             <span class="field-label">Tipo de entrega</span>
+
             <div class="delivery-options">
               <label class="delivery-option">
                 <input type="radio" name="item_entrega_${idx}" value="Obra" checked />
                 <div class="delivery-card">
-                  <strong>Obra</strong>
-                  <span>Plano enrollado, listo para portarollo propio.</span>
+                  <span class="delivery-mark"></span>
+                  <div class="delivery-copy">
+                    <strong>Obra</strong>
+                    <span>Plano enrollado. Listo para portarollo propio.</span>
+                  </div>
                 </div>
               </label>
+
               <label class="delivery-option">
                 <input type="radio" name="item_entrega_${idx}" value="Entrega" />
                 <div class="delivery-card">
-                  <strong>Entrega</strong>
-                  <span>Plano doblado en A4, en sobre.</span>
+                  <span class="delivery-mark"></span>
+                  <div class="delivery-copy">
+                    <strong>Entrega</strong>
+                    <span>Plano doblado en A4, preparado en sobre.</span>
+                  </div>
                 </div>
               </label>
+
               <label class="delivery-option">
                 <input type="radio" name="item_entrega_${idx}" value="Presentacion" />
                 <div class="delivery-card">
-                  <strong>Presentación</strong>
-                  <span>Tubo de cartón con tapas metálicas. Listo para cliente final.</span>
+                  <span class="delivery-mark"></span>
+                  <div class="delivery-copy">
+                    <strong>Presentación</strong>
+                    <span>Tubo de cartón con tapas metálicas. Listo para cliente final.</span>
+                  </div>
                 </div>
               </label>
             </div>
