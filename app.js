@@ -3,7 +3,7 @@
 // Lógica de sesión segura · Magic link · Validación server-side
 // ═══════════════════════════════════════════════════════════════════
 
-const APPS_SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbwN-0FLG5GAxrI7PB5cXSEziMegrkN4XHRQvdPZHuc7US34KX2OrFnzRRN1nlXoltJITQ/exec’;
+const APPS_SCRIPT_URL = ‘https://script.google.com/macros/s/AKfycbycCla-MC00DcwOM3BSx2DT6GLUzldZZTf9o9muHrTmeUuawh3GuXHGUytFVfOs-ByXbg/exec’;
 
 let orderSubmitting = false;
 let allOrders       = [];
