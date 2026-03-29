@@ -8,6 +8,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -22,14 +24,34 @@
         <h1>Portal<br>privado</h1>
         <p class="lead">Portal privado para clientes autorizados.</p>
 
-        <form id="portalLoginForm" class="stack-form" novalidate>
-          <label for="portalEmail">Correo electrónico</label>
-          <div class="field-wrap">
-            <input id="portalEmail" name="email" type="email" placeholder="contacto@estudio.com" autocomplete="email" required />
-          </div>
-          <button class="primary-button" type="submit"><span>Acceder</span></button>
-          <p id="portalLoginMessage" class="status-message" aria-live="polite"></p>
-        </form>
+        <!-- Vista: formulario de solicitud -->
+        <div id="loginView">
+          <form id="portalLoginForm" class="stack-form" novalidate>
+            <label for="portalEmail">Correo electrónico</label>
+            <div class="field-wrap">
+              <input id="portalEmail" name="email" type="email"
+                placeholder="contacto@estudio.com"
+                autocomplete="email" required />
+            </div>
+            <button class="primary-button" type="submit"><span>Solicitar acceso</span></button>
+            <p id="portalLoginMessage" class="status-message" aria-live="polite"></p>
+          </form>
+          <p class="helper" style="margin-top:20px;font-size:0.82rem;">
+            Te enviaremos un enlace de acceso seguro a tu correo.
+          </p>
+        </div>
+
+        <!-- Vista: confirmación enviado -->
+        <div id="sentView" style="display:none;">
+          <p class="eyebrow" style="color:#b8d4a0;margin-bottom:12px;">Enlace enviado</p>
+          <p class="lead compact">
+            Revisá tu bandeja de entrada.<br>
+            El enlace expira en <strong>30 minutos</strong> y es de un solo uso.
+          </p>
+          <button id="resendBtn" class="mini-button" type="button" style="margin-top:28px;">
+            Usar otro correo
+          </button>
+        </div>
       </div>
 
       <div class="right-panel logo-panel" aria-hidden="true">
