@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verificando acceso · Portal privado</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .auth-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      max-width: 480px;
+    }
+    .auth-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin-bottom: 32px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <main class="site-shell portal-shell">
+    <section class="card split-card">
+
+      <div class="left-panel">
+        <div class="auth-wrap">
+
+          <!-- Estado: verificando -->
+          <div id="authLoading">
+            <div class="auth-spinner"></div>
+            <p class="eyebrow">Verificando</p>
+            <h1 style="font-size:clamp(2rem,4vw,3.2rem);">Validando<br>tu acceso</h1>
+            <p class="lead compact" style="margin-top:16px;">Un momento…</p>
+          </div>
+
+          <!-- Estado: error -->
+          <div id="authError" style="display:none;">
+            <p class="eyebrow" style="color:#f0a0a0;">Acceso denegado</p>
+            <h1 style="font-size:clamp(2rem,4vw,3.2rem);" id="authErrorTitle">Enlace inválido</h1>
+            <p class="lead compact" style="margin-top:16px;" id="authErrorMsg">
+              Este enlace no es válido, ya fue utilizado o expiró.
+            </p>
+            <a href="index.html" class="primary-button" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;margin-top:28px;">
+              <span>Solicitar nuevo acceso</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="right-panel logo-panel" aria-hidden="true">
+        <img src="assets/LANDING.svg" class="topo-bg" alt="" />
+        <div class="hero-stage">
+          <div class="hero-stage__glow"></div>
+          <div class="hero-stage__frame">
+            <div class="hero-stage__top">
+              <div class="spec-item">
+                <span class="spec-item__label">ENTREGA</span>
+                <strong>rápida</strong>
+              </div>
+              <div class="spec-item">
+                <span class="spec-item__label">ARCHIVOS</span>
+                <strong>ordenados</strong>
+              </div>
+              <div class="spec-item">
+                <span class="spec-item__label">ATENCIÓN</span>
+                <strong>directa</strong>
+              </div>
+            </div>
+            <img src="assets/isologo.svg" alt="" class="hero-logo" />
+            <div class="hero-stage__specs">
+              <div class="spec-item">
+                <span class="spec-item__label">ACCESO</span>
+                <strong>privado</strong>
+              </div>
+              <div class="spec-item">
+                <span class="spec-item__label">FLUJO</span>
+                <strong>simple</strong>
+              </div>
+              <div class="spec-item">
+                <span class="spec-item__label">SOPORTE</span>
+                <strong>humano</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
