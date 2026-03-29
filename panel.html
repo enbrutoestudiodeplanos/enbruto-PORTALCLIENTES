@@ -1,171 +1,924 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Panel</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0a0a0a" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="site-shell panel-shell">
-    <section class="card dashboard-card">
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwN-0FLG5GAxrI7PB5cXSEziMegrkN4XHRQvdPZHuc7US34KX2OrFnzRRN1nlXoltJITQ/exec';
 
-      <header class="panel-header">
-        <div>
-          <p class="eyebrow">Cliente</p>
-          <h1 id="panelStudio">Estudio</h1>
-          <p class="lead compact" id="panelEmail">correo@estudio.com</p>
+let orderSubmitting = false;
+let allOrders = [];
+let showingAll = false;
+let selectedFile = null;
+let priceTable = {};
+
+function isUrgent() {
+  return document.getElementById('urgentCheck')?.checked === true;
+}
+
+// ── Utilidades de sesión ──────────────────────────────────────────────────────
+
+function setMessage(el, message, type = '') {
+  if (!el) return;
+  el.textContent = message;
+  el.classList.remove('is-error', 'is-success');
+  if (type) el.classList.add(type);
+}
+
+function getStoredUser() {
+  try {
+    return JSON.parse(localStorage.getItem('enbrutoPortalUser') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+function setStoredUser(user) {
+  localStorage.setItem('enbrutoPortalUser', JSON.stringify(user));
+}
+
+function clearStoredUser() {
+  localStorage.removeItem('enbrutoPortalUser');
+}
+
+// ── Red ───────────────────────────────────────────────────────────────────────
+
+async function postData(payload) {
+  const response = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error('La respuesta del servidor no es válida.');
+  }
+}
+
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('No se pudo leer el archivo.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Precios ───────────────────────────────────────────────────────────────────
+
+/*
+Esperamos de la hoja de cálculo un objeto con la siguiente forma:
+{
+  "ok": true,
+  "prices": {
+    "A1_color": 2500,
+    "A1_byn":   1500,
+    "A2_color": 1800,
+    "A2_byn":   1100,
+    "A3_color": 1200,
+    "A3_byn":    700,
+    "A4_color":  800,
+    "A4_byn":    450
+  }
+}
+Las claves son {MEDIDA}_{color|byn}.
+*/
+
+async function fetchPrices() {
+  try {
+    const data = await postData({ action: 'get_prices' });
+    if (data.ok && data.prices) {
+      priceTable = data.prices;
+    } else {
+      priceTable = {};
+    }
+  } catch {
+    priceTable = {};
+  }
+
+  updatePriceDisplay();
+}
+
+function getPriceKey(medida, tipo) {
+  const tipoKey = String(tipo).toLowerCase().includes('color') ? 'color' : 'byn';
+  return `${medida}_${tipoKey}`;
+}
+
+function calculatePrice() {
+  const medida = document.getElementById('orderSize')?.value || '';
+  const tipo = document.getElementById('orderType')?.value || '';
+  const cantidad = parseInt(document.getElementById('orderQty')?.value || '1', 10) || 1;
+
+  const key = getPriceKey(medida, tipo);
+  const unitPrice = Number(priceTable[key]);
+
+  if (!unitPrice) return null;
+
+  const subtotal = unitPrice * cantidad;
+  const recargo = isUrgent() ? Math.round(subtotal * 0.25) : 0;
+  const total = subtotal + recargo;
+
+  return { unitPrice, cantidad, subtotal, recargo, total };
+}
+
+function formatARS(amount) {
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+function updatePriceDisplay() {
+  const display = document.getElementById('priceDisplay');
+  const valueEl = document.getElementById('priceValue');
+  const breakdown = document.getElementById('priceBreakdown');
+
+  if (!display || !valueEl) return;
+
+  const result = calculatePrice();
+
+  if (!result) {
+    display.style.display = 'none';
+    return;
+  }
+
+  display.style.display = 'flex';
+  valueEl.textContent = formatARS(result.total);
+
+  if (breakdown) {
+    const parts = [];
+    if (result.cantidad > 1) {
+      parts.push(`${result.cantidad} × ${formatARS(result.unitPrice)}`);
+    }
+    if (result.recargo > 0) {
+      parts.push(`<span class="price-urgent">urgente +${formatARS(result.recargo)}</span>`);
+    }
+    breakdown.innerHTML = parts.join(' · ');
+  }
+}
+
+// ── Render panel ──────────────────────────────────────────────────────────────
+
+function fillPanel(profile) {
+  const panelStudio = document.getElementById('panelStudio');
+  const panelEmail = document.getElementById('panelEmail');
+  const orderStudy = document.getElementById('orderStudy');
+
+  if (panelStudio) panelStudio.textContent = profile.estudio || '—';
+  if (panelEmail) panelEmail.textContent = profile.email || '—';
+  if (orderStudy) orderStudy.value = profile.estudio || '';
+}
+
+function fillProfile(profile) {
+  const profileStudio = document.getElementById('profileStudio');
+  const profileEmail = document.getElementById('profileEmail');
+  const profilePhone = document.getElementById('profilePhone');
+
+  if (profileStudio) profileStudio.textContent = profile.estudio || '—';
+  if (profileEmail) profileEmail.textContent = profile.email || '—';
+  if (profilePhone) profilePhone.textContent = profile.telefono || '—';
+}
+
+function fillActivityStats(orders = []) {
+  const statTotal = document.getElementById('statTotal');
+  const statMedida = document.getElementById('statMedida');
+  const statMes = document.getElementById('statMes');
+
+  if (statTotal) statTotal.textContent = String(orders.length || 0);
+
+  if (statMedida) {
+    const freq = {};
+    orders.forEach((o) => {
+      if (o.medida) freq[o.medida] = (freq[o.medida] || 0) + 1;
+    });
+    const top = Object.entries(freq).sort((a, b) => b[1] - a[1])[0];
+    statMedida.textContent = top ? top[0] : '—';
+  }
+
+  if (statMes) {
+    const now = new Date();
+    const mes = now.getMonth();
+    const anio = now.getFullYear();
+
+    const count = orders.filter((o) => {
+      if (!o.fecha) return false;
+      const parts = String(o.fecha).split('/');
+      if (parts.length < 2) return false;
+
+      const m = parseInt(parts[1], 10) - 1;
+      const a = parts[2] ? parseInt(parts[2], 10) : anio;
+
+      return m === mes && a === anio;
+    }).length;
+
+    statMes.textContent = String(count);
+  }
+}
+
+function renderLastOrder(orders = []) {
+  const wrap = document.getElementById('lastOrderContent');
+  if (!wrap) return;
+
+  if (!orders.length) {
+    wrap.innerHTML = '<span class="profile-empty">Sin pedidos registrados.</span>';
+    return;
+  }
+
+  const item = orders[0];
+  const obra = item.obra || 'Sin obra';
+  const medida = item.medida || '';
+  const tipo = item.tipo_impresion || '';
+  const cantidad = item.cantidad ? `${item.cantidad} copia${item.cantidad == 1 ? '' : 's'}` : '';
+  const estado = item.estado || 'recibido';
+  const fecha = item.fecha || '';
+
+  wrap.innerHTML = `
+    <div class="last-order-row">
+      <div class="history-meta">
+        <div class="history-title">
+          ${obra}${fecha ? `<span class="history-date">${fecha}</span>` : ''}
         </div>
-        <div class="header-actions">
-          <button id="profileButton" class="mini-button" type="button">Perfil</button>
-          <button id="logoutButton" class="mini-button" type="button">Salir</button>
+        <div class="history-sub">${[medida, tipo, cantidad].filter(Boolean).join(' · ')}</div>
+      </div>
+      <div class="history-estado">
+        ${renderEstado(estado)}
+      </div>
+    </div>
+  `;
+}
+
+function renderFiles(items = []) {
+  const wrap = document.getElementById('sharedFiles');
+  if (!wrap) return;
+
+  wrap.innerHTML = '';
+
+  if (!items.length) {
+    wrap.innerHTML = `
+      <div class="file-row">
+        <div class="file-meta">
+          <div class="file-sub">No hay archivos disponibles.</div>
         </div>
-      </header>
+      </div>
+    `;
+    return;
+  }
 
-      <section class="dashboard-grid">
+  items.forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'file-row';
+    row.innerHTML = `
+      <div class="file-meta">
+        <div class="file-title">${item.archivo || 'Archivo'}</div>
+        <div class="file-sub">${item.tipo || 'Disponible'}</div>
+      </div>
+      <a class="file-link" href="${item.link || '#'}" target="_blank" rel="noopener">Descargar</a>
+    `;
+    wrap.appendChild(row);
+  });
+}
 
-        <article class="info-block">
-          <div class="block-head">
-            <h2>Archivos disponibles</h2>
-          </div>
-          <div id="sharedFiles" class="file-list"></div>
-        </article>
+// ── Estado visual de pedidos ──────────────────────────────────────────────────
 
-        <article class="info-block">
-          <div class="block-head between">
-            <h2>Solicitar impresión</h2>
-          </div>
-          <form id="orderForm" class="stack-form compact-form" novalidate>
+const ESTADOS = ['recibido', 'en proceso', 'en impresión', 'listo', 'entregado'];
 
-            <div class="grid-two">
-              <div>
-                <label for="orderStudy">Cliente / estudio</label>
-                <input id="orderStudy" name="study" type="text" readonly />
-              </div>
-              <div>
-                <label for="orderCode">Obra / código</label>
-                <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
-              </div>
-            </div>
+function estadoIndex(estado = '') {
+  const e = estado.toLowerCase().trim();
+  const idx = ESTADOS.findIndex((s) => s === e);
+  return idx >= 0 ? idx : 0;
+}
 
-            <div class="grid-three">
-              <div>
-                <label for="orderSize">Medida</label>
-                <select id="orderSize" name="size" required>
-                  <option value="A1">A1</option>
-                  <option value="A2">A2</option>
-                  <option value="A3">A3</option>
-                  <option value="A4">A4</option>
-                </select>
-              </div>
-              <div>
-                <label for="orderType">Impresión</label>
-                <select id="orderType" name="type" required>
-                  <option value="Color">Color</option>
-                  <option value="Blanco y negro">Blanco y negro</option>
-                </select>
-              </div>
-              <div>
-                <label for="orderQty">Cantidad</label>
-                <input id="orderQty" name="quantity" type="number" min="1" step="1" value="1" required />
-              </div>
-            </div>
+function renderEstado(estado = '') {
+  const idx = estadoIndex(estado);
+  const label = ESTADOS[idx];
+  const clase = label.replace(/\s/g, '-');
 
-            <label>Tipo de entrega</label>
-            <div class="delivery-options" id="deliveryOptions" role="group" aria-label="Tipo de entrega">
+  const steps = ESTADOS.map((s, i) => {
+    const active = i <= idx ? 'active' : '';
+    const current = i === idx ? 'current' : '';
+    return `<span class="estado-step ${active} ${current}" title="${s}"></span>`;
+  }).join('');
 
-              <label class="delivery-option" for="deliveryObra">
-                <input type="radio" id="deliveryObra" name="delivery" value="obra" required />
-                <div class="delivery-card">
-                  <div class="delivery-top">
-                    <span class="delivery-name">Obra</span>
-                    <span class="delivery-check" aria-hidden="true"></span>
-                  </div>
-                  <span class="delivery-detail">Plano enrollado para uso inmediato en obra. Protección justa, pensado para ritmo de trabajo real.</span>
-                </div>
-              </label>
+  return `
+    <div class="estado-badge estado-${clase}">${label}</div>
+    <div class="estado-track">${steps}</div>
+  `;
+}
 
-              <label class="delivery-option" for="deliveryArchivo">
-                <input type="radio" id="deliveryArchivo" name="delivery" value="archivo" required />
-                <div class="delivery-card">
-                  <div class="delivery-top">
-                    <span class="delivery-name">Archivo</span>
-                    <span class="delivery-check" aria-hidden="true"></span>
-                  </div>
-                  <span class="delivery-detail">Entrega ordenada y funcional. Formato plegado que permite guardado ágil y manejo cotidiano.</span>
-                </div>
-              </label>
+function renderHistory(items = [], limit = 3) {
+  allOrders = items;
+  const wrap = document.getElementById('orderHistory');
+  if (!wrap) return;
 
-              <label class="delivery-option" for="deliveryFinal">
-                <input type="radio" id="deliveryFinal" name="delivery" value="final" required />
-                <div class="delivery-card">
-                  <div class="delivery-top">
-                    <span class="delivery-name">Cliente final</span>
-                    <span class="delivery-check" aria-hidden="true"></span>
-                  </div>
-                  <span class="delivery-detail">Presentación cuidada. Plano en tubo de cartón con tapa metálica, y rótulo para completar. Pensado para entregar, exhibir o conservar.</span>
-                </div>
-              </label>
+  wrap.innerHTML = '';
 
-            </div>
+  if (!items.length) {
+    wrap.innerHTML = `
+      <div class="history-row">
+        <div class="history-meta">
+          <div class="history-sub">No hay pedidos registrados.</div>
+        </div>
+      </div>
+    `;
+    updateToggleButton();
+    return;
+  }
 
-            <label class="urgency-check-label" for="urgentCheck">
-              <input type="checkbox" id="urgentCheck" name="urgent" value="si" />
-              <span class="urgency-check-box" aria-hidden="true"></span>
-              Entrega urgente
-            </label>
+  const visible = showingAll ? items : items.slice(0, limit);
 
-            <label for="orderNotes">Notas</label>
-            <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+  visible.forEach((item) => {
+    const row = document.createElement('div');
+    row.className = 'history-row';
 
-            <label>PDF</label>
-            <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
-              <div id="dropLabel" class="drop-label">
-                <span>Arrastrá tu PDF acá</span>
-                <span class="drop-hint">o hacé clic para seleccionar</span>
-              </div>
-            </div>
+    const obra = item.obra || 'Sin obra';
+    const medida = item.medida || '';
+    const tipo = item.tipo_impresion || '';
+    const cantidad = item.cantidad ? `${item.cantidad} copia${item.cantidad == 1 ? '' : 's'}` : '';
+    const estado = item.estado || 'recibido';
+    const fecha = item.fecha ? `<span class="history-date">${item.fecha}</span>` : '';
+    const entrega = item.entrega ? ` · ${item.entrega}` : '';
+    const urgente = item.urgente === 'si' ? ' <span class="badge-urgent">urgente</span>' : '';
 
-            <input id="orderFile" name="file" type="file" accept="application/pdf" hidden />
+    row.innerHTML = `
+      <div class="history-main">
+        <div class="history-meta">
+          <div class="history-title">${obra}${fecha}${urgente}</div>
+          <div class="history-sub">${[medida, tipo, cantidad].filter(Boolean).join(' · ')}${entrega}</div>
+        </div>
+        <div class="history-estado">
+          ${renderEstado(estado)}
+        </div>
+      </div>
+    `;
 
-            <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+    wrap.appendChild(row);
+  });
 
-            <div id="priceDisplay" class="price-display" style="display:none">
-              <div class="price-inner">
-                <span class="price-label">Cotización estimada</span>
-                <div class="price-breakdown" id="priceBreakdown"></div>
-              </div>
-              <span id="priceValue" class="price-value">—</span>
-            </div>
+  updateToggleButton();
+}
 
-            <button class="primary-button" type="submit">
-              <span>Solicitar impresión</span>
-            </button>
+function updateToggleButton() {
+  const btn = document.getElementById('toggleHistory');
+  if (!btn) return;
 
-            <p id="orderMessage" class="status-message" aria-live="polite"></p>
-          </form>
-        </article>
+  if (allOrders.length <= 3) {
+    btn.style.display = 'none';
+    return;
+  }
 
-        <article class="info-block full-span">
-          <div class="block-head between">
-            <h2>Historial de pedidos</h2>
-            <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
-          </div>
-          <div id="orderHistory" class="history-list"></div>
-        </article>
+  btn.style.display = 'inline-flex';
+  btn.textContent = showingAll ? 'VER MENOS' : `VER TODOS (${allOrders.length})`;
+}
 
-      </section>
-    </section>
-  </main>
+// ── Drag & Drop para PDF ──────────────────────────────────────────────────────
 
-  <script src="app.js"></script>
-</body>
-</html>
+function initDropZone() {
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('orderFile');
+  const dropLabel = document.getElementById('dropLabel');
+
+  if (!dropZone || !fileInput) return;
+
+  function setDropError(msg) {
+    selectedFile = null;
+    fileInput.value = '';
+    dropZone.classList.remove('has-file');
+    dropZone.classList.add('drop-error');
+
+    if (dropLabel) {
+      dropLabel.innerHTML = `<span>${msg}</span><span class="drop-hint">Solo PDF hasta 20 MB</span>`;
+    }
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      setDropError('Solo se admite PDF.');
+      return;
+    }
+
+    if (file.size > 20 * 1024 * 1024) {
+      setDropError('El archivo supera 20 MB.');
+      return;
+    }
+
+    selectedFile = file;
+    dropZone.classList.add('has-file');
+    dropZone.classList.remove('drop-error');
+
+    if (dropLabel) {
+      const kb = (file.size / 1024).toFixed(0);
+      dropLabel.innerHTML = `
+        <span class="drop-filename">📄 ${file.name}</span>
+        <span class="drop-size">${kb} KB</span>
+      `;
+    }
+  }
+
+  dropZone.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  dropZone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInput.click();
+    }
+  });
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer?.files?.[0];
+    handleFile(file);
+  });
+
+  fileInput.addEventListener('change', () => {
+    handleFile(fileInput.files?.[0]);
+  });
+}
+
+// ── Etiqueta de tipo de entrega ───────────────────────────────────────────────
+
+const DELIVERY_LABELS = {
+  obra: 'Obra',
+  archivo: 'Archivo',
+  final: 'Cliente final'
+};
+
+// ── Modal de confirmación (con precio) ───────────────────────────────────────
+
+function buildConfirmModal() {
+  if (document.getElementById('confirmModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'confirmModal';
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-box">
+      <p class="eyebrow">Confirmá tu pedido</p>
+
+      <div id="confirmDetails" class="confirm-details"></div>
+
+      <div id="confirmPriceWrap" class="confirm-price-wrap" style="display:none">
+        <div class="confirm-price-inner">
+          <span class="confirm-price-label">Total estimado</span>
+          <span id="confirmPriceValue" class="confirm-price-value">—</span>
+        </div>
+        <p class="confirm-price-note">Precio de referencia. Puede variar si el plano requiere ajustes.</p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="confirmCancel" class="mini-button" type="button">CANCELAR</button>
+        <button id="confirmSend" class="primary-button" type="button">CONFIRMAR Y ENVIAR</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById('confirmCancel')?.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+}
+
+function openConfirmModal(data) {
+  buildConfirmModal();
+
+  const details = document.getElementById('confirmDetails');
+  const priceWrap = document.getElementById('confirmPriceWrap');
+  const priceValue = document.getElementById('confirmPriceValue');
+
+  if (details) {
+    details.innerHTML = `
+      <div class="confirm-row"><span>Estudio</span><strong>${data.estudio}</strong></div>
+      <div class="confirm-row"><span>Obra</span><strong>${data.obra}</strong></div>
+      <div class="confirm-row"><span>Medida</span><strong>${data.medida}</strong></div>
+      <div class="confirm-row"><span>Impresión</span><strong>${data.tipo}</strong></div>
+      <div class="confirm-row"><span>Cantidad</span><strong>${data.cantidad} copia${data.cantidad == 1 ? '' : 's'}</strong></div>
+      <div class="confirm-row"><span>Entrega</span><strong>${DELIVERY_LABELS[data.entrega] || data.entrega}</strong></div>
+      <div class="confirm-row"><span>Prioridad</span><strong>${data.urgente ? 'Urgente — tiene un costo adicional del 25%' : 'Normal'}</strong></div>
+      ${data.notas ? `<div class="confirm-row"><span>Notas</span><strong>${data.notas}</strong></div>` : ''}
+      <div class="confirm-row"><span>Archivo</span><strong>📄 ${data.fileName}</strong></div>
+    `;
+  }
+
+  if (data.price && priceWrap && priceValue) {
+    priceWrap.style.display = 'flex';
+    priceValue.textContent = formatARS(data.price.total);
+
+    const breakdown = [];
+    if (data.price.cantidad > 1) {
+      breakdown.push(`${data.price.cantidad} × ${formatARS(data.price.unitPrice)}`);
+    }
+    if (data.price.recargo > 0) {
+      breakdown.push(`⚡ urgente +${formatARS(data.price.recargo)}`);
+    }
+
+    if (breakdown.length) {
+      const note = priceWrap.querySelector('.confirm-price-note');
+      if (note) {
+        note.textContent = `${breakdown.join(' · ')} · Precio de referencia, puede variar.`;
+      }
+    }
+  } else if (priceWrap) {
+    priceWrap.style.display = 'none';
+  }
+
+  const modal = document.getElementById('confirmModal');
+  modal?.classList.add('is-open');
+
+  return new Promise((resolve) => {
+    const sendBtn = document.getElementById('confirmSend');
+    const cancelBtn = document.getElementById('confirmCancel');
+
+    if (!sendBtn || !cancelBtn || !sendBtn.parentNode) {
+      resolve(false);
+      return;
+    }
+
+    const newSendBtn = sendBtn.cloneNode(true);
+    sendBtn.parentNode.replaceChild(newSendBtn, sendBtn);
+
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+    newSendBtn.addEventListener('click', () => {
+      closeModal();
+      resolve(true);
+    }, { once: true });
+
+    newCancelBtn.addEventListener('click', () => {
+      closeModal();
+      resolve(false);
+    }, { once: true });
+  });
+}
+
+function closeModal() {
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.classList.remove('is-open');
+}
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+
+async function handleLogin(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const emailInput = form.querySelector('input[name="email"]') || document.getElementById('portalEmail');
+  const email = (emailInput?.value || '').trim().toLowerCase();
+  const msg = document.getElementById('portalLoginMessage');
+
+  if (!email) {
+    setMessage(msg, 'Ingresá un correo válido.', 'is-error');
+    return;
+  }
+
+  try {
+    setMessage(msg, 'Validando acceso...');
+
+    const data = await postData({ action: 'login', email });
+
+    if (!data.ok) {
+      throw new Error('Este correo aún no fue autorizado.');
+    }
+
+    const profile = {
+      estudio: data.estudio || '—',
+      email: data.email || email,
+      telefono: data.telefono || ''
+    };
+
+    setStoredUser(profile);
+    window.location.href = 'panel.html';
+  } catch (error) {
+    setMessage(msg, error.message || 'Este correo aún no fue autorizado.', 'is-error');
+  }
+}
+
+// ── Envío de pedido ───────────────────────────────────────────────────────────
+
+async function handleOrderSubmit(event) {
+  event.preventDefault();
+  if (orderSubmitting) return;
+
+  const form = event.currentTarget;
+  const msg = document.getElementById('orderMessage');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const user = getStoredUser();
+
+  if (!user || !user.email || !user.estudio) {
+    clearStoredUser();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const fileInput = form.querySelector('input[name="file"]');
+  const file = selectedFile || fileInput?.files?.[0];
+
+  if (!file) {
+    setMessage(msg, 'Adjuntá un PDF.', 'is-error');
+    return;
+  }
+
+  if (file.type !== 'application/pdf') {
+    setMessage(msg, 'Solo se admite PDF.', 'is-error');
+    return;
+  }
+
+  if (file.size > 20 * 1024 * 1024) {
+    setMessage(msg, 'El archivo supera el tamaño recomendado de 20 MB.', 'is-error');
+    return;
+  }
+
+  const obraInput = form.querySelector('input[name="code"]');
+  const medidaInput = form.querySelector('select[name="size"]');
+  const tipoInput = form.querySelector('select[name="type"]');
+  const cantidadInput = form.querySelector('input[name="quantity"]');
+  const notasInput = form.querySelector('textarea[name="notes"]');
+  const deliveryInput = form.querySelector('input[name="delivery"]:checked');
+
+  const obra = (obraInput?.value || '').trim();
+  const medida = medidaInput?.value || '';
+  const tipo = tipoInput?.value || '';
+  const cantidad = cantidadInput?.value || '';
+  const notas = (notasInput?.value || '').trim();
+  const entrega = deliveryInput?.value || '';
+  const urgente = isUrgent();
+
+  if (!obra) {
+    setMessage(msg, 'Ingresá una obra o código.', 'is-error');
+    return;
+  }
+
+  if (!medida) {
+    setMessage(msg, 'Seleccioná una medida.', 'is-error');
+    return;
+  }
+
+  if (!tipo) {
+    setMessage(msg, 'Seleccioná el tipo de impresión.', 'is-error');
+    return;
+  }
+
+  if (!cantidad || Number(cantidad) < 1) {
+    setMessage(msg, 'Ingresá una cantidad válida.', 'is-error');
+    return;
+  }
+
+  if (!entrega) {
+    setMessage(msg, 'Seleccioná el tipo de entrega.', 'is-error');
+    return;
+  }
+
+  const price = calculatePrice();
+
+  const confirmed = await openConfirmModal({
+    estudio: user.estudio,
+    obra,
+    medida,
+    tipo,
+    cantidad,
+    notas,
+    entrega,
+    urgente,
+    fileName: file.name,
+    price
+  });
+
+  if (!confirmed) return;
+
+  try {
+    orderSubmitting = true;
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'ENVIANDO...';
+    }
+
+    setMessage(msg, 'Enviando pedido...');
+
+    const base64 = await toBase64(file);
+    const fileData = String(base64).split(',')[1];
+
+    const data = await postData({
+      action: 'crear_pedido',
+      estudio: user.estudio,
+      email: user.email,
+      obra,
+      medida,
+      tipo,
+      cantidad,
+      notas,
+      entrega,
+      urgente: urgente ? 'si' : 'no',
+      precio_total: price ? price.total : '',
+      fileName: file.name,
+      fileData
+    });
+
+    if (!data.ok) {
+      throw new Error(data.error || 'No se pudo enviar el pedido.');
+    }
+
+    setMessage(msg, 'Pedido recibido. Te contactaremos por la vía habitual.', 'is-success');
+    form.reset();
+    resetDropZone();
+    resetUrgent();
+    selectedFile = null;
+
+    const orderStudy = document.getElementById('orderStudy');
+    if (orderStudy) orderStudy.value = user.estudio || '';
+
+    updatePriceDisplay();
+    await loadDashboard();
+  } catch (error) {
+    setMessage(msg, error.message || 'No se pudo enviar el pedido.', 'is-error');
+  } finally {
+    orderSubmitting = false;
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = '<span>Solicitar impresión</span>';
+    }
+  }
+}
+
+function resetDropZone() {
+  const dropZone = document.getElementById('dropZone');
+  const dropLabel = document.getElementById('dropLabel');
+
+  if (dropZone) {
+    dropZone.classList.remove('has-file', 'drop-error', 'drag-over');
+  }
+
+  if (dropLabel) {
+    dropLabel.innerHTML = `
+      <span>Arrastrá tu PDF acá</span>
+      <span class="drop-hint">o hacé clic para seleccionar</span>
+    `;
+  }
+
+  const fileInput = document.getElementById('orderFile');
+  if (fileInput) fileInput.value = '';
+}
+
+function resetUrgent() {
+  const cb = document.getElementById('urgentCheck');
+  if (cb) cb.checked = false;
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
+async function loadDashboard() {
+  const user = getStoredUser();
+
+  if (!user || !user.email || !user.estudio) {
+    clearStoredUser();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  fillPanel(user);
+
+  try {
+    const filesData = await postData({ action: 'get_files', email: user.email });
+    renderFiles(filesData.ok ? (filesData.files || []) : []);
+  } catch {
+    renderFiles([]);
+  }
+
+  try {
+    const ordersData = await postData({ action: 'get_orders', email: user.email });
+    renderHistory(ordersData.ok ? (ordersData.orders || []) : []);
+  } catch {
+    renderHistory([]);
+  }
+}
+
+// ── Perfil ────────────────────────────────────────────────────────────────────
+
+async function loadProfile() {
+  const user = getStoredUser();
+
+  if (!user || !user.email || !user.estudio) {
+    clearStoredUser();
+    window.location.href = 'index.html';
+    return;
+  }
+
+  fillProfile(user);
+
+  try {
+    const profileData = await postData({ action: 'get_profile', email: user.email });
+    if (profileData.ok && profileData.profile) {
+      setStoredUser(profileData.profile);
+      fillProfile(profileData.profile);
+    }
+  } catch {
+    fillProfile(user);
+  }
+
+  try {
+    const ordersData = await postData({ action: 'get_orders', email: user.email });
+    const orders = ordersData.ok ? (ordersData.orders || []) : [];
+    fillActivityStats(orders);
+    renderLastOrder(orders);
+  } catch {
+    fillActivityStats([]);
+    renderLastOrder([]);
+  }
+}
+
+// ── Listeners de precio en vivo ───────────────────────────────────────────────
+
+function bindPriceListeners() {
+  ['orderSize', 'orderType', 'orderQty'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('change', updatePriceDisplay);
+    document.getElementById(id)?.addEventListener('input', updatePriceDisplay);
+  });
+
+  document.getElementById('urgentCheck')?.addEventListener('change', updatePriceDisplay);
+}
+
+// ── Botones globales ──────────────────────────────────────────────────────────
+
+function bindGlobalButtons() {
+  document.getElementById('profileButton')?.addEventListener('click', () => {
+    window.location.href = 'perfil.html';
+  });
+
+  document.getElementById('logoutButton')?.addEventListener('click', () => {
+    clearStoredUser();
+    window.location.href = 'index.html';
+  });
+
+  document.getElementById('backToPanel')?.addEventListener('click', () => {
+    window.location.href = 'panel.html';
+  });
+
+  document.getElementById('goToOrder')?.addEventListener('click', () => {
+    window.location.href = 'panel.html#order';
+  });
+
+  document.getElementById('toggleHistory')?.addEventListener('click', () => {
+    showingAll = !showingAll;
+    renderHistory(allOrders);
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindGlobalButtons();
+
+  const params = new URLSearchParams(window.location.search);
+  const sessionParam = params.get('session');
+
+  if (sessionParam) {
+    try {
+      const profile = JSON.parse(decodeURIComponent(escape(atob(sessionParam))));
+      if (profile && profile.email && profile.estudio) {
+        setStoredUser(profile);
+        window.location.replace('panel.html');
+        return;
+      }
+    } catch {
+      // Si falla el decode, seguimos con el flujo normal
+    }
+  }
+
+  const loginForm = document.getElementById('portalLoginForm');
+  if (loginForm) {
+    const emailParam = params.get('email');
+    const portalEmail = document.getElementById('portalEmail');
+    if (emailParam && portalEmail) portalEmail.value = emailParam;
+    loginForm.addEventListener('submit', handleLogin);
+  }
+
+  const orderForm = document.getElementById('orderForm');
+  if (orderForm) {
+    loadDashboard();
+    fetchPrices();
+    initDropZone();
+    bindPriceListeners();
+    orderForm.addEventListener('submit', handleOrderSubmit);
+  }
+
+  const profileStudio = document.getElementById('profileStudio');
+  if (profileStudio) {
+    loadProfile();
+  }
+});
