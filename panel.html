@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -19,151 +18,154 @@
   <main class="site-shell panel-shell">
     <section class="card dashboard-card">
 
-```
-  <header class="panel-header">
-    <div>
-      <p class="eyebrow">Cliente</p>
-      <h1 id="panelStudio">Estudio</h1>
-      <p class="lead compact" id="panelEmail">correo@estudio.com</p>
-    </div>
-    <div class="header-actions">
-      <button id="profileButton" class="mini-button" type="button">Perfil</button>
-      <button id="logoutButton"  class="mini-button" type="button">Salir</button>
-    </div>
-  </header>
-
-  <section class="dashboard-grid">
-
-    <article class="info-block">
-      <div class="block-head">
-        <h2>Archivos disponibles</h2>
-      </div>
-      <div id="sharedFiles" class="file-list"></div>
-    </article>
-
-    <article class="info-block">
-      <div class="block-head between">
-        <h2>Solicitar impresión</h2>
-      </div>
-      <form id="orderForm" class="stack-form compact-form" novalidate>
-
-        <div class="grid-two">
-          <div>
-            <label for="orderStudy">Cliente / estudio</label>
-            <input id="orderStudy" name="study" type="text" readonly />
-          </div>
-          <div>
-            <label for="orderCode">Obra / código</label>
-            <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
-          </div>
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Cliente</p>
+          <h1 id="panelStudio">Estudio</h1>
+          <p class="lead compact" id="panelEmail">correo@estudio.com</p>
         </div>
-
-        <div class="grid-three">
-          <div>
-            <label for="orderSize">Medida</label>
-            <select id="orderSize" name="size" required>
-              <option value="A1">A1</option>
-              <option value="A2">A2</option>
-              <option value="A3">A3</option>
-              <option value="A4">A4</option>
-            </select>
-          </div>
-          <div>
-            <label for="orderType">Impresión</label>
-            <select id="orderType" name="type" required>
-              <option value="Color">Color</option>
-              <option value="Blanco y negro">Blanco y negro</option>
-            </select>
-          </div>
-          <div>
-            <label for="orderQty">Cantidad</label>
-            <input id="orderQty" name="quantity" type="number" min="1" step="1" value="1" required />
-          </div>
+        <div class="header-actions">
+          <button id="profileButton" class="mini-button" type="button">Perfil</button>
+          <button id="logoutButton" class="mini-button" type="button">Salir</button>
         </div>
+      </header>
 
-        <label>Tipo de entrega</label>
-        <div class="delivery-options" id="deliveryOptions" role="group" aria-label="Tipo de entrega">
+      <section class="dashboard-grid">
 
-          <label class="delivery-option" for="deliveryObra">
-            <input type="radio" id="deliveryObra" name="delivery" value="obra" required />
-            <div class="delivery-card">
-              <div class="delivery-top">
-                <span class="delivery-name">Obra</span>
-                <span class="delivery-check" aria-hidden="true"></span>
+        <article class="info-block">
+          <div class="block-head">
+            <h2>Archivos disponibles</h2>
+          </div>
+          <div id="sharedFiles" class="file-list"></div>
+        </article>
+
+        <article class="info-block">
+          <div class="block-head between">
+            <h2>Solicitar impresión</h2>
+          </div>
+          <form id="orderForm" class="stack-form compact-form" novalidate>
+
+            <div class="grid-two">
+              <div>
+                <label for="orderStudy">Cliente / estudio</label>
+                <input id="orderStudy" name="study" type="text" readonly />
               </div>
-              <span class="delivery-detail">Plano enrollado para uso inmediato en obra. Protección justa, pensado para ritmo de trabajo real.</span>
-            </div>
-          </label>
-
-          <label class="delivery-option" for="deliveryArchivo">
-            <input type="radio" id="deliveryArchivo" name="delivery" value="archivo" required />
-            <div class="delivery-card">
-              <div class="delivery-top">
-                <span class="delivery-name">Archivo</span>
-                <span class="delivery-check" aria-hidden="true"></span>
+              <div>
+                <label for="orderCode">Obra / código</label>
+                <input id="orderCode" name="code" type="text" placeholder="Ej. Casa Pérez" required />
               </div>
-              <span class="delivery-detail">Entrega ordenada y funcional. Formato plegado que permite guardado ágil y manejo cotidiano.</span>
             </div>
-          </label>
 
-          <label class="delivery-option" for="deliveryFinal">
-            <input type="radio" id="deliveryFinal" name="delivery" value="final" required />
-            <div class="delivery-card">
-              <div class="delivery-top">
-                <span class="delivery-name">Cliente final</span>
-                <span class="delivery-check" aria-hidden="true"></span>
+            <div class="grid-three">
+              <div>
+                <label for="orderSize">Medida</label>
+                <select id="orderSize" name="size" required>
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="A3">A3</option>
+                  <option value="A4">A4</option>
+                </select>
               </div>
-              <span class="delivery-detail">Presentación cuidada. Plano en tubo de cartón con tapa metálica, y rótulo para completar. Pensado para entregar, exhibir o conservar.</span>
+              <div>
+                <label for="orderType">Impresión</label>
+                <select id="orderType" name="type" required>
+                  <option value="Color">Color</option>
+                  <option value="Blanco y negro">Blanco y negro</option>
+                </select>
+              </div>
+              <div>
+                <label for="orderQty">Cantidad</label>
+                <input id="orderQty" name="quantity" type="number" min="1" step="1" value="1" required />
+              </div>
             </div>
-          </label>
 
-        </div>
+            <label>Tipo de entrega</label>
+            <div class="delivery-options" id="deliveryOptions" role="group" aria-label="Tipo de entrega">
 
-        <label class="urgency-check-label" for="urgentCheck">
-          <input type="checkbox" id="urgentCheck" name="urgent" value="si" />
-          <span class="urgency-check-box" aria-hidden="true"></span>
-          Entrega urgente
-        </label>
+              <label class="delivery-option" for="deliveryObra">
+                <input type="radio" id="deliveryObra" name="delivery" value="obra" required />
+                <div class="delivery-card">
+                  <div class="delivery-top">
+                    <span class="delivery-name">Obra</span>
+                    <span class="delivery-check" aria-hidden="true"></span>
+                  </div>
+                  <span class="delivery-detail">Plano enrollado para uso inmediato en obra. Protección justa, pensado para ritmo de trabajo real.</span>
+                </div>
+              </label>
 
-        <label for="orderNotes">Notas</label>
-        <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+              <label class="delivery-option" for="deliveryArchivo">
+                <input type="radio" id="deliveryArchivo" name="delivery" value="archivo" required />
+                <div class="delivery-card">
+                  <div class="delivery-top">
+                    <span class="delivery-name">Archivo</span>
+                    <span class="delivery-check" aria-hidden="true"></span>
+                  </div>
+                  <span class="delivery-detail">Entrega ordenada y funcional. Formato plegado que permite guardado ágil y manejo cotidiano.</span>
+                </div>
+              </label>
 
-        <label>PDF</label>
-        <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
-          <div id="dropLabel" class="drop-label">
-            <span>Arrastrá tu PDF acá</span>
-            <span class="drop-hint">o hacé clic para seleccionar</span>
+              <label class="delivery-option" for="deliveryFinal">
+                <input type="radio" id="deliveryFinal" name="delivery" value="final" required />
+                <div class="delivery-card">
+                  <div class="delivery-top">
+                    <span class="delivery-name">Cliente final</span>
+                    <span class="delivery-check" aria-hidden="true"></span>
+                  </div>
+                  <span class="delivery-detail">Presentación cuidada. Plano en tubo de cartón con tapa metálica, y rótulo para completar. Pensado para entregar, exhibir o conservar.</span>
+                </div>
+              </label>
+
+            </div>
+
+            <label class="urgency-check-label" for="urgentCheck">
+              <input type="checkbox" id="urgentCheck" name="urgent" value="si" />
+              <span class="urgency-check-box" aria-hidden="true"></span>
+              Entrega urgente
+            </label>
+
+            <label for="orderNotes">Notas</label>
+            <textarea id="orderNotes" name="notes" rows="3" placeholder="Indicaciones adicionales."></textarea>
+
+            <label>PDF</label>
+            <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Subir PDF">
+              <div id="dropLabel" class="drop-label">
+                <span>Arrastrá tu PDF acá</span>
+                <span class="drop-hint">o hacé clic para seleccionar</span>
+              </div>
+            </div>
+
+            <input id="orderFile" name="file" type="file" accept="application/pdf" hidden />
+
+            <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+
+            <div id="priceDisplay" class="price-display" style="display:none">
+              <div class="price-inner">
+                <span class="price-label">Cotización estimada</span>
+                <div class="price-breakdown" id="priceBreakdown"></div>
+              </div>
+              <span id="priceValue" class="price-value">—</span>
+            </div>
+
+            <button class="primary-button" type="submit">
+              <span>Solicitar impresión</span>
+            </button>
+
+            <p id="orderMessage" class="status-message" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="info-block full-span">
+          <div class="block-head between">
+            <h2>Historial de pedidos</h2>
+            <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
           </div>
-        </div>
-        <input id="orderFile" name="file" type="file" accept="application/pdf" style="display:none" />
-        <p class="helper">Solo PDF a escala correcta. Tamaño recomendado: hasta 20 MB.</p>
+          <div id="orderHistory" class="history-list"></div>
+        </article>
 
-        <div id="priceDisplay" class="price-display" style="display:none">
-          <div class="price-inner">
-            <span class="price-label">Cotización estimada</span>
-            <div class="price-breakdown" id="priceBreakdown"></div>
-          </div>
-          <span id="priceValue" class="price-value">—</span>
-        </div>
-
-        <button class="primary-button" type="submit"><span>Solicitar impresión</span></button>
-        <p id="orderMessage" class="status-message" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="info-block full-span">
-      <div class="block-head between">
-        <h2>Historial de pedidos</h2>
-        <button id="toggleHistory" class="mini-button" type="button" style="display:none">VER TODOS</button>
-      </div>
-      <div id="orderHistory" class="history-list"></div>
-    </article>
-
-  </section>
-</section>
-```
-
+      </section>
+    </section>
   </main>
+
   <script src="app.js"></script>
 </body>
 </html>
