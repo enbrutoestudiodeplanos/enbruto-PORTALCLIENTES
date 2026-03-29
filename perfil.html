@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Perfil</title>
+  <title>Perfil · Portal privado</title>
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
@@ -26,6 +26,7 @@
         <div class="header-actions">
           <button id="goToOrder"   class="mini-button accent-button" type="button">+ Nuevo pedido</button>
           <button id="backToPanel" class="mini-button" type="button">Volver</button>
+          <button id="logoutButton" class="mini-button" type="button">Salir</button>
         </div>
       </header>
 
@@ -48,6 +49,10 @@
           <div class="data-row">
             <span>Teléfono</span>
             <strong id="profilePhone">—</strong>
+          </div>
+          <div class="data-row">
+            <span>Sesión válida hasta</span>
+            <strong id="profileSessionExp">—</strong>
           </div>
         </div>
 
