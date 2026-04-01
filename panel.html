@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel · Portal privado</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="site-shell">
+    <section class="card dashboard-card">
+
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Panel</p>
+          <h2 id="panelStudio" style="font-size:clamp(1.4rem,2.5vw,2rem);font-weight:800;letter-spacing:-0.015em;">—</h2>
+          <p class="helper" id="panelEmail" style="margin-top:4px;"></p>
+        </div>
+        <div class="header-actions">
+          <button id="profileButton" class="mini-button accent-button" type="button">Mi perfil</button>
+          <button id="logoutButton"  class="mini-button" type="button">Salir</button>
+        </div>
+      </header>
+
+      <div class="dashboard-grid">
+
+        <!-- Columna izquierda: pedidos + archivos -->
+        <div style="display:grid;gap:20px;align-content:start;">
+
+          <!-- Historial -->
+          <div class="info-block">
+            <div class="block-head between">
+              <h2>Pedidos</h2>
+              <button id="toggleHistory" class="mini-button" type="button" style="display:none;font-size:0.72rem;min-height:36px;padding:0 14px;">VER TODOS</button>
+            </div>
+            <div id="orderHistory" class="history-list">
+              <div class="history-row">
+                <div class="history-main">
+                  <div class="history-meta">
+                    <div class="history-sub">Cargando pedidos…</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Archivos compartidos -->
+          <div class="info-block">
+            <div class="block-head">
+              <h2>Archivos</h2>
+            </div>
+            <div id="sharedFiles" class="file-list">
+              <div class="file-row">
+                <div class="file-meta">
+                  <div class="file-sub">Cargando archivos…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna derecha: formulario de pedido -->
+        <div class="info-block">
+          <div class="block-head">
+            <h2>Nuevo pedido</h2>
+          </div>
+
+          <form id="orderForm" class="stack-form compact-form" novalidate>
+
+            <!-- Obra -->
+            <label for="orderCode">Obra / Código</label>
+            <div class="field-wrap">
+              <input id="orderCode" name="code" type="text"
+                placeholder="Ej: Torre Palermo — PB"
+                autocomplete="off" required />
+            </div>
+
+            <!-- Medida + Tipo -->
+            <div class="grid-two">
+              <div>
+                <label for="orderSize">Medida</label>
+                <div class="field-wrap">
+                  <select id="orderSize" name="size" required>
+                    <option value="">Seleccioná</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label for="orderType">Impresión</label>
+                <div class="field-wrap">
+                  <select id="orderType" name="type" required>
+                    <option value="">Seleccioná</option>
+                    <option value="Color">Color</option>
+                    <option value="B&N">Blanco y negro</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cantidad + Urgente -->
+            <div class="grid-two" style="align-items:end;">
+              <div>
+                <label for="orderQty">Cantidad</label>
+                <div class="field-wrap">
+                  <input id="orderQty" name="quantity" type="number"
+                    min="1" max="999" value="1" required />
+                </div>
+              </div>
+              <div style="padding-bottom:2px;">
+                <label class="urgency-check-label">
+                  <input type="checkbox" id="urgentCheck" name="urgente" />
+                  <span class="urgency-check-box"></span>
+                  Urgente (+25%)
+                </label>
+              </div>
+            </div>
+
+            <!-- Tipo de entrega -->
+            <div>
+              <label style="margin-bottom:10px;">Tipo de entrega</label>
+              <div class="delivery-options">
+
+                <label class="delivery-option">
+                  <input type="radio" name="delivery" value="obra" required />
+                  <div class="delivery-card">
+                    <div class="delivery-top">
+                      <span class="delivery-name">Obra</span>
+                      <span class="delivery-check"></span>
+                    </div>
+                    <span class="delivery-detail">Entrega en el lugar de la obra</span>
+                  </div>
+                </label>
+
+                <label class="delivery-option">
+                  <input type="radio" name="delivery" value="archivo" />
+                  <div class="delivery-card">
+                    <div class="delivery-top">
+                      <span class="delivery-name">Archivo</span>
+                      <span class="delivery-check"></span>
+                    </div>
+                    <span class="delivery-detail">Retiro en estudio de impresión</span>
+                  </div>
+                </label>
+
+                <label class="delivery-option">
+                  <input type="radio" name="delivery" value="final" />
+                  <div class="delivery-card">
+                    <div class="delivery-top">
+                      <span class="delivery-name">Final</span>
+                      <span class="delivery-check"></span>
+                    </div>
+                    <span class="delivery-detail">Entrega al cliente final</span>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- Notas -->
+            <label for="orderNotes">Notas (opcional)</label>
+            <div class="field-wrap">
+              <textarea id="orderNotes" name="notes"
+                placeholder="Indicaciones especiales, escala, terminación…"></textarea>
+            </div>
+
+            <!-- Drop zone -->
+            <div>
+              <label>Archivo PDF</label>
+              <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Subir PDF">
+                <div id="dropLabel" class="drop-label">
+                  <span>Arrastrá tu PDF acá</span>
+                  <span class="drop-hint">o hacé clic para seleccionar</span>
+                </div>
+              </div>
+              <input type="file" id="orderFile" name="file" accept="application/pdf" style="display:none" />
+            </div>
+
+            <!-- Precio estimado -->
+            <div id="priceDisplay" style="display:none;" class="price-display">
+              <div class="price-inner">
+                <span class="price-label">Precio estimado</span>
+                <span id="priceBreakdown" class="price-breakdown"></span>
+                <span class="price-note" style="font-size:0.68rem;color:rgba(255,255,255,0.28);margin-top:2px;">
+                  Estimación automática · El valor final puede ajustarse según revisión técnica
+                </span>
+              </div>
+              <span id="priceValue" class="price-value">—</span>
+            </div>
+
+            <!-- Submit -->
+            <button class="primary-button" type="submit" id="orderSubmitBtn">
+              <span>Solicitar impresión</span>
+            </button>
+
+            <p id="orderMessage" class="status-message" aria-live="polite"></p>
+
+            <!-- Campo oculto para estudio (lo llena JS desde sesión) -->
+            <input type="hidden" id="orderStudy" name="study" />
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

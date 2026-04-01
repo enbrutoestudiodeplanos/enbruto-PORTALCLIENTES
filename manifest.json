@@ -1,0 +1,22 @@
+{
+  "name": "En Bruto Portal",
+  "short_name": "En Bruto",
+  "description": "Portal de clientes — En Bruto Estudio",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}
